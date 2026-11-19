@@ -1,0 +1,20 @@
+{
+  "schema_version": "3.0",
+  "video_id": "",
+  "route": "IMAGE_CAROUSEL",
+  "reason": "",
+  "target_image_count": 6,
+  "target_duration_s": null,
+  "music_mode": "platform_manual",
+  "voice_enabled": false,
+  "fallback_route": null,
+  "fallback_condition": "",
+  "brief_path": "",
+  "brief_sha256": "",
+  "hypothesis_card_path": "",
+  "hypothesis_card_sha256": "",
+  "shot_list_path": "",
+  "shot_list_sha256": "",
+  "frozen_at": "",
+  "frozen_by": "master"
+}

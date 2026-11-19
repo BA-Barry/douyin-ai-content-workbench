@@ -1,0 +1,88 @@
+# Local secrets and authentication state
+.env
+.env.*
+!.env.example
+**/credentials.yaml
+**/credentials.yml
+**/credentials.json
+**/*cookie*
+**/Cookies*
+**/Login Data*
+**/Local State
+**/state/
+
+# Project-local runtimes, models, caches, and downloaded tools
+/envs/
+/models/
+/cache/
+/tools/
+/workspace/
+/logs/
+/trash/
+
+# Generated deliverables and private source material
+/outputs/
+/assets/library/
+/1/
+/拼贴复古风/
+/content/
+/data/
+/research/
+/reports/
+*.mp4
+*.mov
+*.mkv
+*.avi
+*.webm
+*.wav
+*.mp3
+*.m4a
+*.flac
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.gif
+
+# Third-party reference repositories are installed separately
+/projects/
+
+# Third-party Skills are installed from their upstream projects
+/.baoyu-skills/
+/skills/baoyu-image-gen/
+/skills/flux-best-practices/
+/skills/visual-style/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Node and browser runtimes
+node_modules/
+.npm/
+.pnpm-store/
+.yarn/
+dist/
+build/
+coverage/
+**/puppeteer_dev_chrome_profile-*/
+**/chrome-profile/
+content/**/production/**/runtime/
+**/playwright-report/
+**/test-results/
+
+# Editors and operating-system files
+.DS_Store
+Thumbs.db
+Desktop.ini
+.idea/
+.vscode/
+*.tmp
+*.temp
+*.log
+

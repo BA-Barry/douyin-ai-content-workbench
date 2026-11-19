@@ -1,0 +1,9 @@
+{
+  "language": "zh",
+  "segments": [{
+    "start": 0.0,
+    "end": 0.5,
+    "text": "空词",
+    "words": [{"word": " ", "start": 0.0, "end": 0.5}]
+  }]
+}

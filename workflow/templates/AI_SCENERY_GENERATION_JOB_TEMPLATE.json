@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "job_id": "",
+  "series_id": "",
+  "provider": "",
+  "provider_mode": "NATIVE_TOOL",
+  "model": "",
+  "model_version": "",
+  "model_license_id": "SERVICE_TERMS",
+  "model_license_url": "",
+  "prompt_path": "G:\\抖音视频\\content\\<video_id>\\production\\generation\\prompt.md",
+  "prompt_sha256": "",
+  "seed": null,
+  "aspect_ratio": "9:16",
+  "width": 1080,
+  "height": 1920,
+  "reference_assets": [],
+  "budget_approval_path": "",
+  "ai_label_required": true,
+  "output_path": "G:\\抖音视频\\content\\<video_id>\\production\\generation\\generated.png",
+  "human_review": "PENDING",
+  "status": "DRAFT"
+}

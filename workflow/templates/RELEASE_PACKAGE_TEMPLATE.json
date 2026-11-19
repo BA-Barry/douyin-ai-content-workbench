@@ -1,0 +1,9 @@
+{
+  "schema_version": "3.0",
+  "video_id": "",
+  "created_at": "",
+  "route": "IMAGE_CAROUSEL",
+  "files": [],
+  "publish_boundary": "prepare-only; final Publish click requires separate user confirmation",
+  "package_sha256": ""
+}

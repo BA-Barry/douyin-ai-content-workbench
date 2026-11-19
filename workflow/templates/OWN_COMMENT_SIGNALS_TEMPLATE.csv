@@ -1,0 +1,1 @@
+video_id,comment_id_hash,parent_id_hash,captured_at,comment_created_at,text_raw,text_normalized,like_count,reply_count,is_creator,is_promo,intent_label,need_label,question_flag,usable,exclusion_reason,source_url

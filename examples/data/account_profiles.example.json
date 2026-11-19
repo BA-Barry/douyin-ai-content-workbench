@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "active_account_id": "demo-sandbox",
+  "profiles": [
+    {
+      "account_id": "demo-sandbox",
+      "display_name": "本地演示账号",
+      "status": "RESEARCH_ONLY",
+      "platform_account_label": "不对应真实平台账号",
+      "positioning": "用于本地验证工作台流程。",
+      "audience": "演示用户",
+      "allowed_domains": ["ALL"],
+      "preferred_formats": ["IMAGE_CAROUSEL", "ATMOSPHERE_VIDEO", "NARRATED_EXPLAINER"],
+      "notes": "请在本机复制后修改，不要提交真实账号信息。"
+    }
+  ]
+}

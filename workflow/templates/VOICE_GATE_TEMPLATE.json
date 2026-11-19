@@ -1,0 +1,10 @@
+{
+  "schema_version": "3.0",
+  "voice_mode": "licensed_synthetic",
+  "sample_path": "",
+  "sample_sha256": "",
+  "rights_evidence_path": "",
+  "consent_evidence_path": null,
+  "human_approval_path": "",
+  "notes": "8-15 seconds, 48kHz mono PCM WAV"
+}

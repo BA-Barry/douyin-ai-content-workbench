@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="本地运行的抖音内容生产、审核、发布准备与数据复盘工作台">
+  <title>抖音内容工作台</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">D</span>
+      <div><strong>抖音内容工作台</strong><small>Content Workbench</small></div>
+      <button id="mobile-menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu-content">菜单</button>
+    </div>
+    <div id="mobile-menu-content">
+    <div class="sidebar-account"><span>当前运营账号</span><select id="account-switch" aria-label="切换运营账号"></select><button id="account-create" type="button">新建账号档案</button></div>
+    <div class="nav-group"><span>创作</span>
+      <nav id="nav">
+        <button type="button" class="nav-item active" data-view="studio" aria-current="page"><span><b>制作中心</b><small>图片与视频统一入口</small></span></button>
+        <button type="button" class="nav-item" data-view="topics"><span><b>热点与选题</b><small>趋势、题库、收藏</small></span></button>
+        <button type="button" class="nav-item" data-view="assets"><span><b>素材库</b><small>图片、视频、音频与引用</small></span></button>
+        <button type="button" class="nav-item" data-view="projects"><span><b>内容项目</b><small>素材与阶段证据</small></span></button>
+        <button type="button" class="nav-item" data-view="release"><span><b>发布与数据</b><small>发布包、指标、复盘</small></span></button>
+      </nav>
+    </div>
+    <div class="nav-group"><span>资产</span>
+      <nav>
+        <button type="button" class="nav-item" data-view="skills"><span><b>Skill 管理</b><small>风格、视频与声音能力</small></span></button>
+      </nav>
+    </div>
+    <div class="nav-group"><span>管理</span>
+      <nav>
+        <button type="button" class="nav-item" data-view="overview"><span><b>运营总览</b><small>账号与内容状态</small></span></button>
+        <button type="button" class="nav-item" data-view="pipeline"><span><b>流程规范</b><small>18 个证据门</small></span></button>
+        <button type="button" class="nav-item" data-view="offline"><span><b>系统与离线</b><small>运行时和本地缓存</small></span></button>
+      </nav>
+    </div>
+    <div class="sidebar-foot">
+      <div><span class="status-dot"></span>本地工作台运行中</div>
+      <p>正式发布、评论与互动永远不会自动执行。</p>
+    </div>
+    </div>
+  </aside>
+
+  <main>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow" id="page-eyebrow">创作</p>
+        <h1 id="page-title">制作中心</h1>
+        <p class="page-subtitle" id="page-subtitle">选择图片或视频，随后在同一个页面完成设置、制作、质检与发布准备。</p>
+      </div>
+      <div class="header-actions">
+        <span id="runtime-badge" class="runtime-badge">本地模式</span>
+        <button id="audit" class="button ghost">运行项目审计</button>
+        <a id="creator-center-link" class="button dark" target="_blank" rel="noreferrer" href="https://creator.douyin.com/creator-micro/content/upload">进入发布页</a>
+      </div>
+    </header>
+
+    <section id="content" class="content" aria-live="polite">
+      <div class="loading"><span></span>正在读取项目工作流…</div>
+    </section>
+  </main>
+
+  <dialog id="detail-dialog">
+    <button class="close" aria-label="关闭">×</button>
+    <div id="detail"></div>
+  </dialog>
+  <dialog id="confirm-dialog" class="confirm-dialog" aria-labelledby="confirm-title">
+    <form id="confirm-form" novalidate>
+      <div class="confirm-copy">
+        <h2 id="confirm-title">确认操作</h2>
+        <p id="confirm-message"></p>
+      </div>
+      <label id="confirm-typed-field" class="confirm-field">
+        <span>输入下面的名称以确认</span>
+        <code id="confirm-expected"></code>
+        <input id="confirm-input" type="text" autocomplete="off" spellcheck="false">
+      </label>
+      <label id="confirm-ack-field" class="confirm-ack">
+        <input id="confirm-ack" type="checkbox">
+        <span id="confirm-ack-label"></span>
+      </label>
+      <p id="confirm-hint" class="confirm-hint" role="status"></p>
+      <div class="confirm-actions">
+        <button id="confirm-cancel" class="button ghost" type="button">取消</button>
+        <button id="confirm-submit" class="button danger" type="submit" disabled>确认移入回收站</button>
+      </div>
+    </form>
+  </dialog>
+  <div id="toast" role="status"></div>
+  <script src="/draft-state.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>

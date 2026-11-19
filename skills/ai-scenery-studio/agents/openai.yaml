@@ -1,0 +1,7 @@
+interface:
+  display_name: "AI造境工作室"
+  short_description: "批量规划、生成并质检原创竖屏AI风景"
+  brand_color: "#6F8E83"
+  default_prompt: "使用 $ai-scenery-studio 生成一批可追溯、可质检的9:16原创AI造境图片。"
+policy:
+  allow_implicit_invocation: true

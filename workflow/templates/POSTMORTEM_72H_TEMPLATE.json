@@ -1,0 +1,19 @@
+{
+  "schema_version": "3.0",
+  "video_id": "",
+  "content_route": "IMAGE_CAROUSEL",
+  "hypothesis_id": "",
+  "baseline_video_id": "",
+  "release_package_sha256": "",
+  "snapshot_refs": {"first_visible": null, "h24": null, "h72": null},
+  "data_completeness": "",
+  "facts": [],
+  "inferences": [],
+  "hypothesis_decision": "INCONCLUSIVE",
+  "retain": [],
+  "stop": [],
+  "next_single_variable": "",
+  "held_constants_next": [],
+  "next_content_recommendation": "",
+  "remaining_unknowns": []
+}

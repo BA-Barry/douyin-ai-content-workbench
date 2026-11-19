@@ -1,0 +1,10 @@
+{
+  "schema_version": "3.0",
+  "music_mode": "platform_manual",
+  "embedded": false,
+  "planned_mood": "",
+  "music_file_path": null,
+  "music_sha256": null,
+  "rights_evidence_path": null,
+  "actual_selection_recorded_in": "publish_receipt.json"
+}
