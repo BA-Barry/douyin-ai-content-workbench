@@ -8,18 +8,20 @@ that a Codex task can execute.  It deliberately routes only relevant Skills.
 from __future__ import annotations
 
 import csv
+import os
 import re
 from datetime import datetime
 from pathlib import Path
 from typing import Any
 
 
-DEFAULT_SKILLS_ROOT = Path(r"C:\Users\86135\.codex\skills")
+DEFAULT_PROJECT_ROOT = Path(os.environ.get("DOUYIN_PROJECT_ROOT") or Path(__file__).resolve().parents[1]).expanduser().resolve()
+DEFAULT_SKILLS_ROOT = Path(os.environ.get("DOUYIN_SKILLS_DIR") or DEFAULT_PROJECT_ROOT / "skills").expanduser().resolve()
 SYSTEM_CAPABILITIES = {"imagegen"}
 FLOVA_PRIVATE_SKILL = {
-    "id": "1115fa6bc53344ed981a261a43aada82",
+    "id": os.environ.get("DOUYIN_FLOVA_SKILL_ID", ""),
     "name": "抖音导演提示词编译器",
-    "url": "https://www.flova.ai/skill/?id=1115fa6bc53344ed981a261a43aada82",
+    "url": "https://www.flova.ai/skill/?id=" + os.environ.get("DOUYIN_FLOVA_SKILL_ID", ""),
     "visibility": "PRIVATE_UNPUBLISHED",
 }
 

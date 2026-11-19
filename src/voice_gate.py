@@ -5,11 +5,12 @@ import hashlib
 import json
 import sys
 import wave
+import os
 from pathlib import Path
 from typing import Any
 
 
-ROOT = Path("G:/抖音视频")
+ROOT = Path(os.environ.get("DOUYIN_PROJECT_ROOT") or Path(__file__).resolve().parents[1]).expanduser().resolve()
 MODES = {"human_recording", "licensed_synthetic", "authorized_self_clone"}
 
 

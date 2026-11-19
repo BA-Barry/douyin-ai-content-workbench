@@ -1,6 +1,6 @@
 # 抖音内容工作流项目规则
 
-本项目的唯一根目录是 `G:\抖音视频`。任何任务开始前先阅读：
+项目根目录由当前代码位置或 `DOUYIN_PROJECT_ROOT` 决定，不固定盘符或用户名。首次使用先执行 `python manage.py init`。任何任务开始前先阅读：
 
 1. `workflow/MASTER_WORKFLOW.md`
 2. `workflow/TASK_HANDOFF_PROTOCOL.md`
@@ -32,11 +32,11 @@
 
 ## 存储与运行时硬约束
 
-- 所有项目专用 Python/Node 环境、GitHub 项目、模型权重、模型缓存、包管理缓存、浏览器运行时和渲染缓存必须位于 `G:\抖音视频` 内。
-- 固定目录：环境放 `envs/`，模型放 `models/`，包与工具缓存放 `cache/`，参考项目放 `projects/`，单条视频临时渲染放 `content/<video_id>/production/` 或 `workspace/`。
-- 运行任何会下载依赖或模型的命令前，先加载 `config/project-env.ps1`，确认下载位置与预计体积；无法显式重定向到 G 盘的工具不得安装或运行。
-- C 盘只允许保留 Codex 应用自身管理的 Skill/Plugin 元数据；Skill/Plugin 运行产生的模型、浏览器、依赖和缓存仍必须重定向到 G 盘。
-- 禁止把新虚拟环境、Hugging Face/ModelScope/Torch 模型、npm/pip/uv 缓存或临时渲染文件写入用户目录或系统盘。
+- 默认环境为 `.venv/`，兼容已有 `envs/`；模型、缓存、第三方源码默认位于 `models/`、`cache/`、`projects/`，也可按文档显式配置模型和缓存目录。
+- 单条视频临时渲染放 `content/<video_id>/production/` 或 `workspace/`；不得意外写入另一份项目副本。
+- 下载依赖或模型前确认目标位置与体积。Windows 可加载 `config/project-env.ps1`，其他系统使用对应缓存环境变量。
+- 允许复用系统 PATH 中已有 Python、FFmpeg 和官方 CLI。工具的认证存储按官方方式管理，工作台不读取、复制或提交其凭证。
+- 凭证、环境、模型、缓存、素材与真实运营数据不进入公开 Git 历史。
 
 ## 完成标准
 

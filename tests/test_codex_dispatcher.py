@@ -9,7 +9,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 
-PROJECT_ROOT = Path(r"G:\抖音视频")
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
 SPEC = importlib.util.spec_from_file_location("codex_dispatcher_test", PROJECT_ROOT / "src" / "codex_dispatcher.py")
 DISPATCHER = importlib.util.module_from_spec(SPEC)
 assert SPEC.loader is not None

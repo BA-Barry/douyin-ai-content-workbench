@@ -6,8 +6,12 @@ param(
 
 $ErrorActionPreference = 'Stop'
 # Keep this file ASCII: Windows PowerShell 5.1 otherwise reads UTF-8 as ANSI.
-$projectRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..')).Path
-$python = Join-Path $projectRoot 'envs\content\Scripts\python.exe'
+$projectRoot = if ($env:DOUYIN_PROJECT_ROOT) { [IO.Path]::GetFullPath($env:DOUYIN_PROJECT_ROOT) } else { (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..')).Path }
+$python = $env:DOUYIN_PYTHON
+if (-not $python) {
+    $python = @((Join-Path $projectRoot '.venv\Scripts\python.exe'), (Join-Path $projectRoot 'envs\content\Scripts\python.exe')) | Where-Object { Test-Path -LiteralPath $_ -PathType Leaf } | Select-Object -First 1
+}
+if (-not $python) { $python = (Get-Command python -ErrorAction SilentlyContinue).Source }
 $server = Join-Path $projectRoot 'workbench\server.py'
 $runtime = Join-Path $projectRoot 'workspace\workbench\runtime'
 $url = "http://127.0.0.1:$Port/"
@@ -70,6 +74,10 @@ else {
         throw "Workbench server is missing: $server"
     }
     . (Join-Path $projectRoot 'config\project-env.ps1')
+    if (Test-Path -LiteralPath (Join-Path $projectRoot 'manage.py')) {
+        & $python (Join-Path $projectRoot 'manage.py') init
+        if ($LASTEXITCODE -ne 0) { throw 'Local data initialization failed.' }
+    }
     $env:DOUYIN_WORKBENCH_OFFLINE = if ($Offline) { '1' } else { '0' }
     $env:PYTHONUNBUFFERED = '1'
     New-Item -ItemType Directory -Path $runtime -Force | Out-Null

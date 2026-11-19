@@ -20,8 +20,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import quote, urlparse
 from urllib.request import HTTPRedirectHandler, build_opener
+from project_runtime import configured_path, find_tool
 
-ROOT = Path(r"G:\抖音视频")
+ROOT = Path(os.environ.get("DOUYIN_PROJECT_ROOT") or Path(__file__).resolve().parents[1]).expanduser().resolve()
 ACTIVE_STATES = {"QUEUED", "RUNNING", "WAITING_USER", "RECOVERABLE"}
 
 
@@ -67,13 +68,12 @@ def _write(path, data):
 
 def cli(args, *, root=ROOT, cwd=None, on_event=None):
     """Allow-listed callers construct args; returned retry command strings are never executed."""
-    exe = root / "envs" / "flova-cli" / "flova.exe"
-    if not exe.is_file():
+    exe = find_tool("flova", root)
+    if not exe:
         raise FileNotFoundError("Flova CLI 未安装")
-    # Existing .flova is a junction to G:. Never read token/config contents.
-    _inside(Path.home() / ".flova", root)
+    # Authentication storage is managed by the official CLI; do not inspect it.
     env = dict(os.environ)
-    cache = root / "cache" / "flova-runtime"
+    cache = configured_path("DOUYIN_CACHE_DIR", root / "cache") / "flova-runtime"
     cache.mkdir(parents=True, exist_ok=True)
     env.update(TEMP=str(cache), TMP=str(cache), XDG_CACHE_HOME=str(cache))
     process = subprocess.Popen([str(exe), *args], cwd=cwd or root, env=env,
@@ -132,7 +132,7 @@ def cli(args, *, root=ROOT, cwd=None, on_event=None):
 
 
 def account_status(root=ROOT):
-    result = {"available": (root / "envs/flova-cli/flova.exe").is_file(), "authenticated": False,
+    result = {"available": bool(find_tool("flova", root)), "authenticated": False,
               "credits_balance": None, "subscription_info": None, "message": "", "checked_at": now_iso()}
     if not result["available"]:
         result["message"] = "Flova CLI 未安装"
@@ -186,7 +186,7 @@ def confirmation(root, video_id):
     fresh = compile_package(source)
     if fresh.get("provider_target") != "FLOVA" or fresh.get("status") != "WAITING_GENERATION_APPROVAL":
         raise ValueError("需要有效的 Flova 视频任务确认卡")
-    for key in ("source_prompt_package_sha256", "generation_spec", "references", "shots", "negative_constraints", "continuity_locks"):
+    for key in ("source_prompt_package_sha256", "generation_spec", "references", "shots", "negative_constraints", "continuity_locks", "private_skill"):
         if task.get(key) != fresh.get(key):
             raise ValueError("任务确认卡已过期，请重新生成并确认")
     if task.get("status") != "WAITING_GENERATION_APPROVAL" or task.get("blockers"):
@@ -195,6 +195,8 @@ def confirmation(root, video_id):
 
 
 def validate_approval(parameters, task):
+    if not task.get("private_skill", {}).get("skill_id"):
+        raise ValueError("请先设置自己的 DOUYIN_FLOVA_SKILL_ID 并重新生成任务确认卡")
     if parameters.get("generation_ack") is not True or parameters.get("budget_mode") != "INCLUDED_ONLY":
         raise ValueError("必须明确批准本任务，且仅使用免费或订阅内额度")
     limit = parameters.get("max_credits")
@@ -270,8 +272,8 @@ def download_video(url, target):
 
 def probe_video(path, root=ROOT):
     from pipeline_tools.qa_probe import probe_media
-    ffmpeg = next((root / "tools/ffmpeg/current").rglob("ffmpeg.exe"), None)
-    ffprobe = next((root / "tools/ffmpeg/current").rglob("ffprobe.exe"), None)
+    ffmpeg = find_tool("ffmpeg", root)
+    ffprobe = find_tool("ffprobe", root)
     if not ffmpeg or not ffprobe:
         raise ValueError("本地媒体检测工具不可用")
     result = probe_media(path, ffmpeg=str(ffmpeg), ffprobe=str(ffprobe))

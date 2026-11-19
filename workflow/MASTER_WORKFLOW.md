@@ -1,9 +1,11 @@
 # 抖音内容主控工作流 v3
 
 版本：3.0  
-唯一根目录：`G:\抖音视频`  
+项目根目录：当前工作副本，或 `DOUYIN_PROJECT_ROOT` 指定的完整副本
 唯一状态源：`data/content_registry.csv`  
 原则：每一步有输入、输出、负责人、硬门和失败回退；聊天记录不是完成证据。
+
+公开部署与当前能力以根 README 和 `docs/` 为入口。本规范保留维护者风景账号的运营案例；其中栏目配比、历史发布数量和工具记录不作为新使用者已经完成的配置或证据。首次使用先运行 `python manage.py init`，再建立自己的账号定位与研究。
 
 ## 1. 当前账号定位
 
@@ -180,13 +182,13 @@ E0 账号定位
 ## 8. 常用命令
 
 ```powershell
-. 'G:\抖音视频\config\project-env.ps1'
-& 'G:\抖音视频\envs\content\Scripts\python.exe' 'G:\抖音视频\src\workflow_control.py' audit
-& 'G:\抖音视频\envs\content\Scripts\python.exe' 'G:\抖音视频\src\workflow_trace.py' --video-id <video_id> --output <trace_report.json>
-& 'G:\抖音视频\envs\content\Scripts\python.exe' 'G:\抖音视频\src\release_package.py' validate --package <release_package.json>
-& 'G:\抖音视频\envs\content\Scripts\python.exe' 'G:\抖音视频\src\metrics_v2.py' summary --video-id <video_id>
-& 'G:\抖音视频\envs\content\Scripts\python.exe' 'G:\抖音视频\src\voice_gate.py' --contract <voice_gate.json>
-& 'G:\抖音视频\envs\content\Scripts\python.exe' 'G:\抖音视频\src\music_gate.py' plan --file <music_plan.json>
+. '.\config\project-env.ps1'
+& '.\envs\content\Scripts\python.exe' '.\src\workflow_control.py' audit
+& '.\envs\content\Scripts\python.exe' '.\src\workflow_trace.py' --video-id <video_id> --output <trace_report.json>
+& '.\envs\content\Scripts\python.exe' '.\src\release_package.py' validate --package <release_package.json>
+& '.\envs\content\Scripts\python.exe' '.\src\metrics_v2.py' summary --video-id <video_id>
+& '.\envs\content\Scripts\python.exe' '.\src\voice_gate.py' --contract <voice_gate.json>
+& '.\envs\content\Scripts\python.exe' '.\src\music_gate.py' plan --file <music_plan.json>
 ```
 
 旧文件 `TOOLCHAIN_STATUS_20260818.md`、`THREAD_ASSIGNMENTS_20260818.md` 和多角色实验记录保留作历史证据；运行时只认本文件、`CONTENT_ROUTE_RUNBOOK.md`、`SESSION_POLICY.md` 与新模板。

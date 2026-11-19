@@ -1,7 +1,7 @@
 # 工作流 v3 验证报告
 
 - 验证时间：2026-08-19 12:59 +08:00
-- 环境：`G:\抖音视频\envs\content`
+- 环境：`.\envs\content`
 - 运行前：已加载 `config/project-env.ps1`
 - 结果：`36 tests / 36 PASS / 0 skipped / 0 failed`
 - 项目审计：`workflow_control.py audit = PASS`
@@ -22,7 +22,7 @@
 - 8–15 秒声音短样、48kHz mono、样本哈希批准、合成声音权利和克隆同意门通过正反测试。
 - 平台手选音乐禁止意外嵌入本地文件；发布曲目记录必须绑定 release package。
 - H72 缺失时复盘保持 `INCONCLUSIVE`，不会提前制造结论。
-- G 盘 FFmpeg/ffprobe 的视频、无音频视频、黑帧/冻结/静音/响度探针通过。
+- 项目目录 FFmpeg/ffprobe 的视频、无音频视频、黑帧/冻结/静音/响度探针通过。
 - 素材权利、AI 来源、人工复核和 BLOCKED 权利门通过正反测试。
 
 ## 仍需真实内容验证
@@ -35,7 +35,7 @@
 ## 运行命令
 
 ```powershell
-. 'G:\抖音视频\config\project-env.ps1'
-& 'G:\抖音视频\envs\content\Scripts\python.exe' -m unittest discover -s 'G:\抖音视频\tests' -v
-& 'G:\抖音视频\envs\content\Scripts\python.exe' 'G:\抖音视频\src\workflow_control.py' audit
+. '.\config\project-env.ps1'
+& '.\envs\content\Scripts\python.exe' -m unittest discover -s '.\tests' -v
+& '.\envs\content\Scripts\python.exe' '.\src\workflow_control.py' audit
 ```

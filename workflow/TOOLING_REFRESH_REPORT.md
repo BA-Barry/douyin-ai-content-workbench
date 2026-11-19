@@ -2,7 +2,7 @@
 
 日期：2026-08-18  
 最终审计：`PASS`  
-范围：Agent 分工、GitHub/Skill 候选审计、G 盘环境、视觉/声音/剪辑/QA/指标工具、数据契约。
+范围：Agent 分工、GitHub/Skill 候选审计、项目目录环境、视觉/声音/剪辑/QA/指标工具、数据契约。
 
 ## 总结
 
@@ -14,12 +14,12 @@
 
 | 角色 | 默认工具 | 当前状态 | 关键限制 |
 |---|---|---|---|
-| R1 趋势/受众研究 | DuckDB、scikit-learn、Trafilatura | G 盘环境已安装、导入与 smoke 通过 | 聚类只作人审辅助；Trafilatura 仅处理允许访问的静态公开页 |
+| R1 趋势/受众研究 | DuckDB、scikit-learn、Trafilatura | 项目目录环境已安装、导入与 smoke 通过 | 聚类只作人审辅助；Trafilatura 仅处理允许访问的静态公开页 |
 | R2 脚本/故事板 | 现有 storyboard、Seedance 提示词 Skill | 已有能力足够，不新增全局 Skill | 必须用来源台账和证据优先镜头表；生成式 B-roll 需另行批准费用/上传 |
-| R3 证据视觉 | Remotion 组件 | 1080×1920/30 FPS smoke 通过 | HyperFrames 因硬编码写 C 盘而暂停生产使用 |
+| R3 证据视觉 | Remotion 组件 | 1080×1920/30 FPS smoke 通过 | HyperFrames 因硬编码写 系统级目录而暂停生产使用 |
 | R4 主合成 | Remotion 4.0.506 | 确认为唯一主时间轴 | 项目本地依赖；团队规模超过许可证条件时复核 |
 | R5 剪辑收口 | video-use 的本地 EDL/timeline + FFmpeg/ffprobe | 本地技术 smoke 通过 | ElevenLabs helper 永久禁用，不上传音视频 |
-| R6 声音 | MeloTTS 预训练中文音色候选 | 代码已固定；模型未下载、自然度未验证 | 先建 G 盘最小中文环境并做逐句 A/B；不使用克隆链 |
+| R6 声音 | MeloTTS 预训练中文音色候选 | 代码已固定；模型未下载、自然度未验证 | 先建 项目目录最小中文环境并做逐句 A/B；不使用克隆链 |
 | R7 独立 QA | ffmpeg/ffprobe 只读探测 | 解码、静音、黑帧、冻结、EBU R128 smoke 通过 | QA 不得直接修片或批准发布 |
 | R8 发布/指标 | 主控 + 冻结的指标模板 | 数据契约已建立 | 发布、回复、点赞、关注、私信仍需动作时确认 |
 
@@ -36,9 +36,9 @@
 
 完整审计：`research/tooling_refresh/research_script/tzfilm_douyin_tool_review.md`。
 
-## G 盘落地状态
+## 项目目录落地状态
 
-- 环境与缓存入口：`config/project-env.ps1`；HF、ModelScope、Torch、npm、pip、Playwright、Puppeteer 等运行缓存全部重定向到 G 盘。
+- 环境与缓存入口：`config/project-env.ps1`；HF、ModelScope、Torch、npm、pip、Playwright、Puppeteer 等运行缓存全部重定向到 项目目录。
 - 研究环境：`envs/tooling_refresh_research_script`，锁定 DuckDB 1.5.5、scikit-learn 1.9.0、Trafilatura 2.2.0。
 - FFmpeg：`tools/ffmpeg/current/ffmpeg-master-latest-win64-gpl`，包含 ffmpeg 和 ffprobe；实测版本 `N-126188-g426841da9d-20260817`。
 - 参考仓库：全部位于 `projects/`；MeloTTS 与 TzFilm 已固定 commit。
@@ -54,7 +54,7 @@
 工作流的结构和路由已经完整，但还没有达到“第一条视频可稳定生产”的工程完成状态。下一阶段应按顺序完成：
 
 1. 做一个 15–30 秒真实工程样片：真实录屏/证据 → 逐句旁白 → 字幕对齐 → 5 类证据组件 → Remotion → FFmpeg QA。它只验证管线，不代表正式选题。
-2. 建立 G 盘最小声音链：MeloTTS 逐句 A/B；FunASR 中文回环；若时间戳不足，再加 faster-whisper base/small。未通过自然度门前不能进入正式视频。
+2. 建立 项目目录最小声音链：MeloTTS 逐句 A/B；FunASR 中文回环；若时间戳不足，再加 faster-whisper base/small。未通过自然度门前不能进入正式视频。
 3. 补四个本地接口：转写适配器、`qa_probe`、素材 manifest validator、手动导出 XLSX 的指标导入器。
 4. 建立 `DESIGN.md`：字体许可、最多五色、移动安全区、字幕层级、证据标签、录屏规范和禁止的 AI/PPT 套路。
 5. 完成真实工程样片和声音 A/B 后，才选择第一条正式选题并写新 brief。旧 registry 项 `office-meeting-notes-v2` 仍是历史状态，不能误当新账号的首条内容。

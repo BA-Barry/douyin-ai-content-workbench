@@ -10,7 +10,7 @@ Use only after an exact model and weight version pass the license gate and a 4GB
 
 Before any download:
 
-1. Load `G:\抖音视频\config\project-env.ps1`.
+1. Load `.\config\project-env.ps1`.
 2. Print and verify model, Hugging Face/ModelScope, Torch, pip/uv, temporary, and output paths.
 3. Record expected bytes and G-drive free space.
 4. Use resumable, bounded downloads.

@@ -1,9 +1,11 @@
-$projectRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..')).Path
+$projectRoot = if ($env:DOUYIN_PROJECT_ROOT) { [IO.Path]::GetFullPath($env:DOUYIN_PROJECT_ROOT) } else { (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..')).Path }
+$env:DOUYIN_PROJECT_ROOT = $projectRoot
+$env:PYTHONUTF8 = '1'
 
 $projectPaths = @{
     Envs = Join-Path $projectRoot 'envs'
-    Models = Join-Path $projectRoot 'models'
-    Cache = Join-Path $projectRoot 'cache'
+    Models = if ($env:DOUYIN_MODELS_DIR) { $env:DOUYIN_MODELS_DIR } else { Join-Path $projectRoot 'models' }
+    Cache = if ($env:DOUYIN_CACHE_DIR) { $env:DOUYIN_CACHE_DIR } else { Join-Path $projectRoot 'cache' }
     Workspace = Join-Path $projectRoot 'workspace'
     Projects = Join-Path $projectRoot 'projects'
     Tools = Join-Path $projectRoot 'tools'
@@ -32,7 +34,7 @@ $env:TEMP = Join-Path $projectPaths.Cache 'temp'
 $env:TMP = $env:TEMP
 
 # baoyu-image-gen's codex-cli provider uses the existing Codex login and stores
-# all project-generated cache/log intermediates on G:.  Per-task output/log
+# all project-generated cache/log intermediates under this checkout. Per-task output/log
 # paths are still supplied by the caller.
 $env:BAOYU_CODEX_IMAGEGEN_CACHE_DIR = Join-Path $projectPaths.Cache 'baoyu-codex-imagegen\idempotency'
 $env:BAOYU_CODEX_IMAGEGEN_TIMEOUT_MS = '300000'
@@ -65,18 +67,18 @@ $projectFfprobe = Get-ChildItem -LiteralPath (Join-Path $projectPaths.Tools 'ffm
 
 if ($projectFfmpeg -and $projectFfprobe) {
     $projectFfmpegBin = $projectFfmpeg.Directory.FullName
-    $env:PROJECT_FFMPEG_EXE = $projectFfmpeg.FullName
-    $env:PROJECT_FFPROBE_EXE = $projectFfprobe.FullName
-    $env:IMAGEIO_FFMPEG_EXE = $projectFfmpeg.FullName
-    $env:FFMPEG_BINARY = $projectFfmpeg.FullName
-    $env:FFPROBE_BINARY = $projectFfprobe.FullName
+    if (-not $env:PROJECT_FFMPEG_EXE) { $env:PROJECT_FFMPEG_EXE = $projectFfmpeg.FullName }
+    if (-not $env:PROJECT_FFPROBE_EXE) { $env:PROJECT_FFPROBE_EXE = $projectFfprobe.FullName }
+    $env:IMAGEIO_FFMPEG_EXE = $env:PROJECT_FFMPEG_EXE
+    $env:FFMPEG_BINARY = $env:PROJECT_FFMPEG_EXE
+    $env:FFPROBE_BINARY = $env:PROJECT_FFPROBE_EXE
     if (-not (($env:PATH -split ';') -contains $projectFfmpegBin)) {
         $env:PATH = "$projectFfmpegBin;$env:PATH"
     }
 }
 
 # Make the GitHub baoyu-image-gen Skill callable from a fresh Codex task.
-# Bun is already cached on G:.  The native Codex executable is an existing
+# Discover an optionally cached Bun executable. The native Codex executable is an existing
 # application runtime, not a project dependency or model.
 $projectBun = Get-ChildItem -LiteralPath $env:NPM_CONFIG_CACHE -Recurse -Filter 'bun.exe' -File -ErrorAction SilentlyContinue | Select-Object -First 1
 if ($projectBun) {

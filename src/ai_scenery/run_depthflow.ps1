@@ -3,18 +3,25 @@ param(
     [string[]]$DepthFlowArgs
 )
 
-$projectRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..\..')).Path
-$runtimeRoot = Join-Path $projectRoot 'cache\ai_scenery_motion'
+$projectRoot = if ($env:DOUYIN_PROJECT_ROOT) { [IO.Path]::GetFullPath($env:DOUYIN_PROJECT_ROOT) } else { (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..\..')).Path }
+$cacheRoot = if ($env:DOUYIN_CACHE_DIR) { $env:DOUYIN_CACHE_DIR } else { Join-Path $projectRoot 'cache' }
+$runtimeRoot = Join-Path $cacheRoot 'ai_scenery_motion'
 $pythonEnv = Join-Path $projectRoot 'envs\ai_scenery_motion'
-$ffmpegBin = Join-Path $projectRoot 'tools\ffmpeg\current\ffmpeg-master-latest-win64-gpl\bin'
+$depthflow = $env:DOUYIN_DEPTHFLOW_EXE
+if (-not $depthflow) { $depthflow = Join-Path $pythonEnv 'Scripts\depthflow.exe' }
+if (-not (Test-Path -LiteralPath $depthflow)) { $depthflow = (Get-Command depthflow -ErrorAction SilentlyContinue).Source }
+$ffmpeg = $env:PROJECT_FFMPEG_EXE
+if (-not $ffmpeg) { $ffmpeg = (Get-Command ffmpeg -ErrorAction SilentlyContinue).Source }
+$ffprobe = $env:PROJECT_FFPROBE_EXE
+if (-not $ffprobe) { $ffprobe = (Get-Command ffprobe -ErrorAction SilentlyContinue).Source }
 
 $required = @(
-    (Join-Path $pythonEnv 'Scripts\depthflow.exe'),
-    (Join-Path $ffmpegBin 'ffmpeg.exe'),
-    (Join-Path $ffmpegBin 'ffprobe.exe')
+    $depthflow,
+    $ffmpeg,
+    $ffprobe
 )
 foreach ($path in $required) {
-    if (-not (Test-Path -LiteralPath $path)) {
+    if (-not $path -or -not (Test-Path -LiteralPath $path)) {
         throw "Required runtime file is missing: $path"
     }
 }
@@ -32,7 +39,9 @@ $env:TEMP = $tempDir
 $env:TMP = $tempDir
 $env:PYTHONUTF8 = '1'
 $env:PYTHONIOENCODING = 'utf-8'
-$env:PATH = "$ffmpegBin;$env:PATH"
+$ffmpegBin = Split-Path -Parent $ffmpeg
+$ffprobeBin = Split-Path -Parent $ffprobe
+$env:PATH = "$ffmpegBin;$ffprobeBin;$env:PATH"
 
-& (Join-Path $pythonEnv 'Scripts\depthflow.exe') @DepthFlowArgs
+& $depthflow @DepthFlowArgs
 exit $LASTEXITCODE

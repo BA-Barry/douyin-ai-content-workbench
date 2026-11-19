@@ -1,7 +1,7 @@
 """Local media library and project binding helpers for the workbench.
 
 The library is a shared asset base, not a second workflow state machine.  Files
-are copied into ``G:\\抖音视频\\assets\\library`` and every project consumes
+are copied into the project's ``assets/library`` and every project consumes
 them through an auditable binding manifest inside its production directory.
 """
 
@@ -14,11 +14,12 @@ import re
 import threading
 import uuid
 from datetime import datetime
+import os
 from pathlib import Path
 from typing import Any, BinaryIO
 
 
-ROOT = Path(r"G:\抖音视频")
+ROOT = Path(os.environ.get("DOUYIN_PROJECT_ROOT") or Path(__file__).resolve().parents[1]).expanduser().resolve()
 LIBRARY_ROOT = ROOT / "assets" / "library"
 MANIFEST = ROOT / "data" / "media_library.json"
 CONTENT_ROOT = ROOT / "content"

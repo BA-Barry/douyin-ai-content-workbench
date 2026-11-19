@@ -1,8 +1,10 @@
 # 抖音内容工作台
 
+部署入口已统一为根目录 `manage.py`，详见 [安装指南](../docs/INSTALLATION.md)、[制作流程](../docs/WORKFLOWS.md) 与根 [README](../README.md)。以下保留组件演进和接口说明，历史本机实验不代表新安装已经完成平台接入。
+
 本机网页入口：`http://127.0.0.1:8765/`
 
-日常使用可直接双击 `workbench\打开工作台.cmd`。它会先检查本地健康接口；若服务未运行，则使用 G 盘项目环境在后台启动，确认可用后打开网页。它不会创建开机启动项或 Windows 计划任务。
+Windows 日常使用可直接双击 `workbench\打开工作台.cmd`。它会先检查本地健康接口；若服务未运行，则使用当前项目环境在后台启动，确认可用后打开网页。它不会创建开机启动项或 Windows 计划任务。
 
 只启动、不打开浏览器：`powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\workbench\open-workbench.ps1 -NoBrowser`。启动器会核对已有服务的项目目录和运行模式；端口被其他服务占用时会提示原因。每次启动日志保存在 `workspace/workbench/runtime/`。
 
@@ -13,7 +15,7 @@
 启动：在 PowerShell 运行：
 
 ```powershell
-& 'G:\抖音视频\workbench\start-workbench.ps1'
+& '.\workbench\start-workbench.ps1'
 ```
 
 工作台直接读取 `data/content_registry.csv` 与每条内容的 `production/`、`qa/`、`approvals/`、`metrics/` 文件；它不复制状态，也不保存账号凭证。
@@ -39,7 +41,7 @@
 
 制作表单不再要求用户选择单个 Skill。保存内容要求后，`workbench/skill_router.py` 会根据项目路线、brief 和关键词选择所有相关能力，并写入 `production/workbench_request.json`、`production/skill_plan.json` 与 `production/dispatch_receipt.json`。图片和视频路线都会先经过 `douyin-prompt-director`，形成统一的 `production/prompt_package.md/json`；视频未点名服务商时默认走私有 Flova Skill，明确点名即梦/Seedance 或 H3 时保留对应直达编译器。工作台动作“生成视频任务确认卡”调用 `src/video_task_compiler.py`，生成 provider-agnostic 的 prepare-only `production/video_task_package.json`。强电影镜头可按需附加 `cinematic-director-frame` prompt-only。`src/codex_dispatcher.py` 使用计划哈希和租约保证同一计划只被领取一次；图片路线在 Brief 批准后进入 READY，视频、费用、声音和上传保持人工门。
 
-项目卡片的“自动 Skill 编排”区同时显示 `provider_target`、`prompt_compiler`、私有 Flova Skill 名称和提示词包是否存在，便于确认实际将走 IMAGEGEN、FLOVA、Seedance 直达还是 MiniMax H3 直达。Skill 回收站支持普通目录和 G 盘源代码的 Codex Junction：移入 Junction Skill 时只移除 C 盘发现链接，G 盘源文件保持不变，恢复时重新建立链接。
+项目卡片的“自动 Skill 编排”区同时显示 `provider_target`、`prompt_compiler`、私有 Flova Skill 名称和提示词包是否存在，便于确认实际将走 IMAGEGEN、FLOVA、Seedance 直达还是 MiniMax H3 直达。Skill 回收站支持普通目录和 项目目录源代码的 Codex Junction：移入 Junction Skill 时只移除 系统级目录发现链接，项目目录源文件保持不变，恢复时重新建立链接。
 
 “制作中心”使用 `src/workflow_control.py init` 建立图片或视频项目，创建时固定账号归属，并展示从选题、素材、制作、QA 到发布准备的操作入口。
 
@@ -59,13 +61,13 @@ Pixelle-Video 的历史工程仍保留在 `envs/pixelle_video`，用于读取既
 
 ```powershell
 # 强制离线模式：隐藏平台入口，只使用本地数据和缓存
-& 'G:\抖音视频\workbench\start-workbench-offline.ps1'
+& '.\workbench\start-workbench-offline.ps1'
 
 # 不启动服务器，导出单个只读 HTML
-& 'G:\抖音视频\workbench\export-offline-workbench.ps1'
+& '.\workbench\export-offline-workbench.ps1'
 ```
 
-离线快照输出到 `G:\抖音视频\workbench\offline\workbench_offline.html`。它不请求网络、不含凭证；趋势与平台指标只能显示最近一次本地缓存。
+离线快照输出到 `.\workbench\offline\workbench_offline.html`。它不请求网络、不含凭证；趋势与平台指标只能显示最近一次本地缓存。
 
 GitHub 调研与采纳依据：`research/workbench/REFERENCE_ADOPTION_V3_20260823.md`。架构与边界：`workbench/ARCHITECTURE_V2.md`。
 

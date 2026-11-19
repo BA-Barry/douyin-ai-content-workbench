@@ -22,7 +22,7 @@ from pathlib import Path
 from typing import Any, Iterator
 
 
-ROOT = Path(r"G:\抖音视频")
+ROOT = Path(os.environ.get("DOUYIN_PROJECT_ROOT") or Path(__file__).resolve().parents[1]).expanduser().resolve()
 QUEUE_STORE = ROOT / "data" / "codex_dispatch_queue.json"
 QUEUE_STATES = {"READY", "WAITING_APPROVAL", "LEASED", "COMPLETED", "FAILED", "CANCELLED"}
 

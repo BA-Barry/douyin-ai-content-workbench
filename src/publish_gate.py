@@ -6,6 +6,7 @@ import hashlib
 import json
 import sys
 from datetime import datetime
+import os
 from pathlib import Path
 
 
@@ -15,7 +16,7 @@ if hasattr(sys.stderr, "reconfigure"):
     sys.stderr.reconfigure(encoding="utf-8")
 
 
-ROOT = Path("G:/抖音视频")
+ROOT = Path(os.environ.get("DOUYIN_PROJECT_ROOT") or Path(__file__).resolve().parents[1]).expanduser().resolve()
 MIN_REFERENCE_VIDEOS = 12
 MIN_CATALOG_VIDEOS = 60
 MIN_CATALOG_CATEGORIES = 6
@@ -209,7 +210,7 @@ def command_prepare(args: argparse.Namespace) -> int:
     content = manifest["content"]
     video = manifest["artifacts"]["video"]
     command = [
-        str((args.root / "envs" / "publisher" / "Scripts" / "python.exe").resolve()),
+        str((args.root / "envs" / "publisher" / ("Scripts/python.exe" if os.name == "nt" else "bin/python")).resolve()),
         "-m",
         "sau_cli",
         "douyin",

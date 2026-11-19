@@ -6,6 +6,7 @@ import json
 import math
 import sys
 from datetime import datetime
+import os
 from pathlib import Path
 from typing import Any
 
@@ -16,7 +17,7 @@ if hasattr(sys.stderr, "reconfigure"):
     sys.stderr.reconfigure(encoding="utf-8")
 
 
-ROOT = Path("G:/抖音视频")
+ROOT = Path(os.environ.get("DOUYIN_PROJECT_ROOT") or Path(__file__).resolve().parents[1]).expanduser().resolve()
 CHECKPOINTS = {"first_visible", "2h", "24h", "72h", "delayed"}
 WINDOW_STATUSES = {"on_time", "delayed", "manual", "unavailable"}
 CONTENT_TYPES = {"IMAGE_CAROUSEL", "ATMOSPHERE_VIDEO", "NARRATED_EXPLAINER"}

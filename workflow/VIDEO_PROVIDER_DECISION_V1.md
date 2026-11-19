@@ -10,7 +10,7 @@
 
 这不是开放自动扣费。试点分为两段：
 
-1. 零费用阶段：锁定版本和校验和、安装到 G 盘、让 Codex 识别 Skill、完成浏览器 OAuth、执行版本/登录/只读项目状态检查。
+1. 零费用阶段：锁定版本和校验和、安装到 项目目录、让 Codex 识别 Skill、完成浏览器 OAuth、执行版本/登录/只读项目状态检查。
 2. 费用阶段：每次生成前展示模型、时长、分辨率、预计积分或费用，由用户即时批准；没有批准不得提交生成。
 
 ## 候选判断
@@ -41,22 +41,22 @@
 ### Flova
 
 - Flova 官方页面明确提供面向 Codex 等 Agent 的 CLI；官方流程称可创建或继续项目、读取真实生成进度、使用 Flova Skills、导出和下载视频。
-- 官方安装文档为 `https://cli.flova.ai/flovaCLI-setup.md`。Windows 安装脚本支持 `FLOVA_INSTALL_DIR` 和 `FLOVA_HOME`，可满足项目全部运行文件落 G 盘的规则。
+- 官方安装文档为 `https://cli.flova.ai/flovaCLI-setup.md`。Windows 安装脚本支持 `FLOVA_INSTALL_DIR` 和 `FLOVA_HOME`，可满足项目全部运行文件落 项目目录的规则。
 - 当前官方 Windows 版本为 `v0.0.10`，发布包约 3.52 MB，官方 SHA-256 为 `89f9d319b3581df4e64e03f7b33bedb9242750b41e51aac6bcf187879ea3e746`。
 - 官方月付价为 Free USD 0、Starter USD 19、Basic USD 49、Pro USD 199；视频生成按积分消耗。免费档存在不代表某一 Seedance 任务必然免费。
 - Flova 服务条款禁止未授权 bot/抓取；官方 CLI 是应该使用的授权接入，第三方浏览器自动化不进入生产链。
 
 ## 受控安装结果（已完成零费用验收）
 
-安装前已加载 `config/project-env.ps1`，并把下载、临时文件和运行目录定向到 G 盘。最终路径：
+安装前已加载 `config/project-env.ps1`，并把下载、临时文件和运行目录定向到 项目目录。最终路径：
 
-- CLI：`G:\抖音视频\envs\flova-cli\flova.exe`
-- 官方 Skill：`G:\抖音视频\projects\flova-cli-official\skill`
-- 运行状态：`G:\抖音视频\envs\flova-cli\state`
-- Codex Skill 索引：`C:\Users\86135\.codex\skills\flova`，仅为指向 G 盘源文件的 Junction
-- Flova 默认状态入口：`C:\Users\86135\.flova`，仅为指向 G 盘状态目录的 Junction
+- CLI：`.\envs\flova-cli\flova.exe`
+- 官方 Skill：`.\projects\flova-cli-official\skill`
+- 运行状态：`.\envs\flova-cli\state`
+- Codex Skill 索引：`<Codex Skills directory>\flova`，仅为指向 项目目录源文件的 Junction
+- Flova 认证存储由官方 CLI 管理；公开版本不要求本机目录 Junction，不读取其凭证。
 
-官方 `install.ps1` 已先下载到 G 盘再执行，没有使用管道直接执行远程脚本。Skill 的唯一内容源留在 G 盘。完整哈希和验证状态见 `research/tooling_refresh/video_provider/flova_install_manifest.json`。
+官方 `install.ps1` 已先下载到 项目目录再执行，没有使用管道直接执行远程脚本。Skill 的唯一内容源留在 项目目录。完整哈希和验证状态见 `research/tooling_refresh/video_provider/flova_install_manifest.json`。
 
 零费用验收结果：
 

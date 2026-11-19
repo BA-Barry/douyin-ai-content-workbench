@@ -9,7 +9,7 @@ Produce small, comparable batches of original 9:16 scenery assets and preserve e
 
 ## Required project inputs
 
-When used inside `G:\抖音视频`, read these first:
+When used inside `.`, read these first:
 
 - `workflow/MASTER_WORKFLOW.md`
 - `workflow/ACCOUNT_POSITIONING_CARD.md`
@@ -32,7 +32,7 @@ For another project, obtain equivalent style, storage, provider-rights, and QA r
 7. Apply [quality gates](references/quality-gates.md). Machine QA does not approve aesthetics, world-rule clarity, similarity, or publication.
 8. Record rejected outputs and reasons. Do not silently replace failed generations and report only the winner.
 
-Inside `G:\抖音视频`, the account-level route contract overrides the generic batch size: `IMAGE_CAROUSEL` requires exactly six approved 1080×1920 final images. Do not begin generation while the registry has not reached `BRIEF_APPROVED`, and do not change the frozen hypothesis, route, shot order, or acceptance sentence during production. Return a route-aware `production_manifest.json`; do not invent a video compatibility field for a carousel.
+Inside `.`, the account-level route contract overrides the generic batch size: `IMAGE_CAROUSEL` requires exactly six approved 1080×1920 final images. Do not begin generation while the registry has not reached `BRIEF_APPROVED`, and do not change the frozen hypothesis, route, shot order, or acceptance sentence during production. Return a route-aware `production_manifest.json`; do not invent a video compatibility field for a carousel.
 
 For Codex-native scenery generation and rapid first-post work, read [Codex scenery recipes](references/codex-scenery-recipes.md). Use the proven `baoyu-image-gen / codex-cli` route when the direct in-thread image tool returns a transport error and the project preference explicitly pins `codex-cli`.
 
@@ -44,7 +44,7 @@ For photoreal impossible-world batches and seasonal romantic landscapes, read [r
 
 ## Fast first-post mode
 
-Outside a project with a frozen route contract, a user may explicitly approve a one-image fast test. Inside `G:\抖音视频`, do not use this shortcut for the current six-image account experiment; finish six approved images or stop the batch. This mode never grants permission to upload or click Publish.
+Outside a project with a frozen route contract, a user may explicitly approve a one-image fast test. Inside `.`, do not use this shortcut for the current six-image account experiment; finish six approved images or stop the batch. This mode never grants permission to upload or click Publish.
 
 ## Prompt invariant
 
@@ -61,17 +61,17 @@ Generated images contain no text, logo, watermark, named artist imitation, exist
 - Stop after the first technical image when generation fails, exceeds resource limits, or produces an unusable format.
 - Stop before animation when the image lacks separable foreground/middle/background or fails human artifact review.
 - Never publish, upload, buy credits, or approve content from this skill.
-- For `G:\抖音视频`, preserve prompt files, prompt hashes, provider/model identity, raw outputs, rejects, replacements, normalization report, final hashes, contact sheet, material manifest, and machine QA under `content/<video_id>/production/`.
+- For `.`, preserve prompt files, prompt hashes, provider/model identity, raw outputs, rejects, replacements, normalization report, final hashes, contact sheet, material manifest, and machine QA under `content/<video_id>/production/`.
 
 ## Commands
 
 Prepare a batch without generating images:
 
 ```powershell
-& 'G:\抖音视频\envs\content\Scripts\python.exe' `
-  'G:\抖音视频\skills\ai-scenery-studio\scripts\prepare_batch.py' `
-  --plan 'G:\抖音视频\workspace\ai_scenery_batch_01_20260818\batch_plan.json' `
-  --output-dir 'G:\抖音视频\workspace\ai_scenery_batch_01_20260818\prepared'
+& '.\envs\content\Scripts\python.exe' `
+  '.\skills\ai-scenery-studio\scripts\prepare_batch.py' `
+  --plan '.\workspace\ai_scenery_batch_01_20260818\batch_plan.json' `
+  --output-dir '.\workspace\ai_scenery_batch_01_20260818\prepared'
 ```
 
 Then validate each generated job with the project validator before calling a provider.

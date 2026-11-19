@@ -28,7 +28,7 @@
 
 ## 供应端路由
 
-1. **默认：baoyu-image-gen / codex-cli。** 这是已安装的 GitHub Skill，通过当前 ChatGPT/Codex 登录调用 Codex 图片生成，不需要 `OPENAI_API_KEY`。2026-08-18 已真实出图；默认配置为9:16、单并发，缓存和临时文件固定在G盘。
+1. **默认：baoyu-image-gen / codex-cli。** 这是已安装的 GitHub Skill，通过当前 ChatGPT/Codex 登录调用 Codex 图片生成，不需要 `OPENAI_API_KEY`。2026-08-18 已真实出图；默认配置为9:16、单并发，缓存和临时文件固定在项目目录。
 2. **诊断备用：对话内原生 imagegen。** 本次即时返回 HTTP 404，判断为调用通道问题而不是提示词问题；保留作后续复测，不阻断已验证的 `codex-cli` 路线。
 3. **外部供应商：默认禁用。** `baoyu-image-gen` 虽支持 OpenAI、Google 等多供应商，但任何付费或把完整提示词/参考图发给第三方的调用仍须先取得用户批准。
 4. **本地生成：工程基线已验证，SD 1.4生产路线已停止。** 锁定的 SD 1.4 可在 RTX 3050 Ti 4GB 上以 model CPU offload 生成504×896图片；首图与单帧证据prompt-only修复均人工FAIL，后者还出现假文字/伪水印。只保留环境与基准，不再换seed或扩批。ComfyUI与更大模型仍未获生产批准。
@@ -38,20 +38,20 @@
 
 | 组件 | 项目路径 | 状态 | 生产权限 |
 |---|---|---|---|
-| visual-style Skill | `G:\抖音视频\skills\visual-style` | 结构通过 | 可建立账号风格文件；不得直接复制第三方品牌资产 |
-| flux-best-practices Skill | `G:\抖音视频\skills\flux-best-practices` | 结构通过 | 仅在FLUX任务使用 |
-| baoyu-image-gen Skill | `G:\抖音视频\skills\baoyu-image-gen` | `codex-cli` live PASS | 当前默认供应端；无需API Key；外部付费provider禁用 |
-| DepthFlow 1.0.0 | `G:\抖音视频\projects\ai_scenery_tooling\DepthFlow` | 真实渲染通过 | 只处理已通过权利门的本地图片 |
-| AI造境运动环境 | `G:\抖音视频\envs\ai_scenery_motion` | `pip check`通过 | CPU PyTorch；OpenGL渲染使用本机3050 Ti |
-| 景深缓存 | `G:\抖音视频\cache\ai_scenery_motion` | G盘覆盖通过 | 不得回退到用户目录 |
+| visual-style Skill | `.\skills\visual-style` | 结构通过 | 可建立账号风格文件；不得直接复制第三方品牌资产 |
+| flux-best-practices Skill | `.\skills\flux-best-practices` | 结构通过 | 仅在FLUX任务使用 |
+| baoyu-image-gen Skill | `.\skills\baoyu-image-gen` | `codex-cli` live PASS | 当前默认供应端；无需API Key；外部付费provider禁用 |
+| DepthFlow 1.0.0 | `.\projects\ai_scenery_tooling\DepthFlow` | 真实渲染通过 | 只处理已通过权利门的本地图片 |
+| AI造境运动环境 | `.\envs\ai_scenery_motion` | `pip check`通过 | CPU PyTorch；OpenGL渲染使用本机3050 Ti |
+| 景深缓存 | `.\cache\ai_scenery_motion` | 项目目录覆盖通过 | 不得回退到用户目录 |
 
-Codex发现目录中的三个新Skill是 Junction，实体仍位于G盘。首次导入DepthFlow产生的32KB C盘缓存已原样迁移到 `G:\抖音视频\cache\ai_scenery_motion\migrated_c_depthflow_20260818`，原路径不存在。
+Codex发现目录中的三个新Skill是 Junction，实体仍位于项目目录。首次导入DepthFlow产生的32KB 系统级目录缓存已原样迁移到 `.\cache\ai_scenery_motion\migrated_c_depthflow_20260818`，原路径不存在。
 
 ## 关键脚本
 
 - `src/ai_scenery/generation_job_validator.py`：生成前合同门；付费API没有预算批准文件时失败。
 - `src/ai_scenery/render_parallax.py`：低幅度、首尾闭合的景深循环渲染。
-- `src/ai_scenery/run_depthflow.ps1`：把缓存、模型目录、临时目录和FFmpeg固定到G盘。
+- `src/ai_scenery/run_depthflow.ps1`：把缓存、模型目录、临时目录和FFmpeg固定到项目目录。
 - `src/ai_scenery/visual_asset_qa.py`：检查图片完整性、运动量、编码规格和近似循环闭合；不声称判断审美。
 
 ## 质量门

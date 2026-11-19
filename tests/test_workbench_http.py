@@ -7,13 +7,14 @@ import tempfile
 import threading
 import time
 import unittest
+from unittest.mock import patch
 from http.server import ThreadingHTTPServer
 from pathlib import Path
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
 
-ROOT = Path(r"G:\抖音视频")
+ROOT = Path(__file__).resolve().parents[1]
 SPEC = importlib.util.spec_from_file_location("douyin_workbench_http", ROOT / "workbench" / "server.py")
 SERVER = importlib.util.module_from_spec(SPEC)
 assert SPEC.loader is not None
@@ -62,14 +63,16 @@ class WorkbenchHttpTests(unittest.TestCase):
         self.assertIn("GENERATE_FLOVA_VIDEO", {item["id"] for item in actions["items"]})
         self.assertEqual({"MoneyPrinterTurbo", "Pixelle-Video", "social-auto-upload"}, {item["name"] for item in integrations["items"]})
         pixelle = next(item for item in integrations["items"] if item["id"] == "pixelle-video")
-        self.assertTrue(pixelle["runtimeReady"])
+        self.assertEqual(SERVER.venv_python(Path(pixelle["runtimePath"])).is_file(), pixelle["runtimeReady"])
+        if not pixelle["runtimeReady"]:
+            self.assertFalse(pixelle["canLaunch"])
         self.assertIn("apiHealthy", pixelle)
 
         skills = self.get_json("/api/skills")
         self.assertTrue(skills)
         self.assertTrue(all(item["category"] in {"视觉风格", "视频制作", "声音字幕", "设计工具", "其他"} for item in skills))
         self.assertIn("items", dispatch)
-        self.assertEqual("FLOVA_CONTROLLED_PILOT", providers["decision"])
+        self.assertEqual(SERVER.video_provider_status()["decision"], providers["decision"])
         projects = self.get_json("/api/projects?all=1")
         self.assertTrue(all("providerTarget" in item["skillPlan"] for item in projects))
         self.assertTrue(all("providerSkillName" in item["skillPlan"] for item in projects))
@@ -77,13 +80,14 @@ class WorkbenchHttpTests(unittest.TestCase):
 
     def test_job_create_run_and_poll_is_functional(self) -> None:
         job = self.post_json("/api/jobs/create", {"actionId": "WORKFLOW_AUDIT", "videoId": "", "parameters": {}})
-        self.post_json(f"/api/jobs/{job['job_id']}/run", {})
-        current = job
-        for _ in range(50):
-            current = self.get_json(f"/api/jobs/{job['job_id']}")
-            if current["status"] not in {"QUEUED", "RUNNING"}:
-                break
-            time.sleep(0.1)
+        with patch.object(SERVER.task_runner, "_run_command", return_value=(0, "synthetic audit=PASS", "")):
+            self.post_json(f"/api/jobs/{job['job_id']}/run", {})
+            current = job
+            for _ in range(50):
+                current = self.get_json(f"/api/jobs/{job['job_id']}")
+                if current["status"] not in {"QUEUED", "RUNNING"}:
+                    break
+                time.sleep(0.1)
         self.assertEqual("SUCCEEDED", current["status"])
         self.assertEqual(0, current["returncode"])
         self.assertFalse(current["publish_clicked"])

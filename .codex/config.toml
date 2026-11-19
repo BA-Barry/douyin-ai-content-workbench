@@ -1,5 +1,4 @@
 sandbox_mode = "workspace-write"
 
 [sandbox_workspace_write]
-writable_roots = ['G:\抖音视频']
 network_access = true

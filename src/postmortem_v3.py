@@ -4,11 +4,12 @@ import argparse
 import csv
 import json
 import sys
+import os
 from pathlib import Path
 from typing import Any
 
 
-ROOT = Path("G:/抖音视频")
+ROOT = Path(os.environ.get("DOUYIN_PROJECT_ROOT") or Path(__file__).resolve().parents[1]).expanduser().resolve()
 
 
 def read_rows(path: Path) -> list[dict[str, str]]:

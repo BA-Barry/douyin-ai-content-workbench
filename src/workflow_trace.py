@@ -6,6 +6,7 @@ import hashlib
 import json
 import sys
 from datetime import datetime
+import os
 from pathlib import Path
 from typing import Any
 
@@ -14,7 +15,7 @@ if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
 
-ROOT = Path("G:/抖音视频")
+ROOT = Path(os.environ.get("DOUYIN_PROJECT_ROOT") or Path(__file__).resolve().parents[1]).expanduser().resolve()
 ROUTES = {"IMAGE_CAROUSEL", "ATMOSPHERE_VIDEO", "NARRATED_EXPLAINER"}
 
 

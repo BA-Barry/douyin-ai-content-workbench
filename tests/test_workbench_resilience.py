@@ -10,7 +10,7 @@ from pathlib import Path
 from unittest.mock import Mock, patch
 
 
-ROOT = Path(r"G:\抖音视频")
+ROOT = Path(__file__).resolve().parents[1]
 SPEC = importlib.util.spec_from_file_location("douyin_workbench_resilience", ROOT / "workbench" / "server.py")
 SERVER = importlib.util.module_from_spec(SPEC)
 assert SPEC.loader is not None

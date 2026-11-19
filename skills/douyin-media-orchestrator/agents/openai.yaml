@@ -1,0 +1,6 @@
+interface:
+  display_name: "抖音媒体总控"
+  short_description: "按内容路线自动组合图片、视频、声音、字幕和质检 Skills"
+  default_prompt: "Use $douyin-media-orchestrator to route and execute the approved media workflow for this project."
+policy:
+  allow_implicit_invocation: true

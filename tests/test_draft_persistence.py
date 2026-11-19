@@ -15,7 +15,7 @@ from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 from unittest.mock import patch
 
-ROOT = Path(r"G:\抖音视频")
+ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "workbench"))
 import draft_store
 

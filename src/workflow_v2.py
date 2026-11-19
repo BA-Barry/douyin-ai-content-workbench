@@ -7,6 +7,7 @@ import json
 import math
 import wave
 from datetime import datetime
+import os
 from pathlib import Path
 
 import edge_tts
@@ -28,7 +29,7 @@ FONT_REGULAR = Path("C:/Windows/Fonts/msyh.ttc")
 FONT_BOLD = Path("C:/Windows/Fonts/msyhbd.ttc")
 FONT_MONO = Path("C:/Windows/Fonts/consola.ttf")
 
-ROOT = Path("G:/抖音视频")
+ROOT = Path(os.environ.get("DOUYIN_PROJECT_ROOT") or Path(__file__).resolve().parents[1]).expanduser().resolve()
 
 SEGMENTS = [
     {

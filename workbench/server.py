@@ -27,7 +27,7 @@ from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlparse
 
 
-ROOT = Path(r"G:\抖音视频")
+ROOT = Path(os.environ.get("DOUYIN_PROJECT_ROOT") or Path(__file__).resolve().parents[1]).expanduser().resolve()
 CONTENT = ROOT / "content"
 WORKBENCH_DIR = Path(__file__).resolve().parent
 if str(WORKBENCH_DIR) not in sys.path:
@@ -41,10 +41,11 @@ import codex_dispatcher
 import media_library
 import draft_store
 import flova_runtime
+from project_runtime import project_python, skills_root, venv_python
 
 
 STATIC = WORKBENCH_DIR / "static"
-SKILLS = Path(r"C:\Users\86135\.codex\skills")
+SKILLS = skills_root()
 TOPIC_POOL = ROOT / "research" / "SCENERY_TOPIC_POOL.csv"
 TOOLCHAIN = ROOT / "workflow" / "TOOLCHAIN_STATUS.md"
 ACCOUNT_PROFILES = ROOT / "data" / "account_profiles.json"
@@ -700,7 +701,7 @@ def integration_status() -> dict:
     payload = []
     for item in integrations:
         source_ready = item["source"].is_dir()
-        runtime_ready = (item["runtime"] / "Scripts" / "python.exe").is_file()
+        runtime_ready = venv_python(item["runtime"]).is_file()
         entry_ready = (item["source"] / item["entry"]).is_file()
         status = "READY" if source_ready and runtime_ready and entry_ready else ("SOURCE_READY" if source_ready and entry_ready else "MISSING")
         process = ENGINE_PROCESSES.get(item["id"])
@@ -749,7 +750,7 @@ def start_integration(engine_id: str) -> dict:
     if engine_id != "pixelle-video":
         raise ValueError("this integration is not launch-enabled")
     source = ROOT / "projects" / "Pixelle-Video"
-    python = ROOT / "envs" / "pixelle_video" / "Scripts" / "python.exe"
+    python = venv_python(ROOT / "envs/pixelle_video")
     app = source / "web" / "app.py"
     api_app = source / "api" / "app.py"
     if not python.is_file() or not app.is_file() or not api_app.is_file():
@@ -1088,7 +1089,7 @@ def skill_catalog() -> list[dict[str, str]]:
 
 
 def run_audit() -> dict[str, str | int]:
-    command = [str(ROOT / "envs" / "content" / "Scripts" / "python.exe"), str(ROOT / "src" / "workflow_control.py"), "audit"]
+    command = [str(project_python(ROOT)), str(ROOT / "src" / "workflow_control.py"), "audit"]
     result = subprocess.run(command, cwd=ROOT, text=True, capture_output=True, encoding="utf-8", errors="replace", timeout=30)
     return {"returncode": result.returncode, "stdout": result.stdout.strip(), "stderr": result.stderr.strip()}
 
@@ -1110,7 +1111,7 @@ def create_project(payload: dict) -> dict:
     if any(row.get("video_id") == video_id for row in read_csv(ROOT / "data" / "content_registry.csv")):
         raise ValueError("project already exists")
     command = [
-        str(ROOT / "envs" / "content" / "Scripts" / "python.exe"), str(ROOT / "src" / "workflow_control.py"), "init",
+        str(project_python(ROOT)), str(ROOT / "src" / "workflow_control.py"), "init",
         "--video-id", video_id, "--title", title, "--hypothesis", hypothesis, "--content-type", content_type, "--pillar", pillar,
         "--hypothesis-id", str(payload.get("hypothesisId") or f"WB-{datetime.now().strftime('%Y%m%d-%H%M%S')}")
     ]

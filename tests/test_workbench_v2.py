@@ -5,7 +5,7 @@ import unittest
 from pathlib import Path
 
 
-ROOT = Path(r"G:\抖音视频")
+ROOT = Path(__file__).resolve().parents[1]
 SPEC = importlib.util.spec_from_file_location("douyin_workbench", ROOT / "workbench" / "server.py")
 WORKBENCH = importlib.util.module_from_spec(SPEC)
 assert SPEC.loader is not None
@@ -15,14 +15,13 @@ SPEC.loader.exec_module(WORKBENCH)
 class WorkbenchV2Tests(unittest.TestCase):
     def test_offline_contract_has_explicit_local_and_online_boundaries(self) -> None:
         status = WORKBENCH.offline_status()
-        self.assertTrue(status["offlineReady"])
+        self.assertEqual(all(item["ready"] for item in status["localModules"]), status["offlineReady"])
         self.assertGreaterEqual(len(status["localModules"]), 5)
         self.assertGreaterEqual(len(status["onlineModules"]), 4)
         self.assertTrue(all("reason" in item and "guard" in item for item in status["onlineModules"]))
 
     def test_every_project_exposes_all_workflow_stages(self) -> None:
-        registry = WORKBENCH.read_csv(ROOT / "data" / "content_registry.csv")
-        self.assertTrue(registry)
+        registry = [{"video_id": "synthetic-stage-test", "state": state, "content_type": "IMAGE_CAROUSEL"} for state in ("IDEA", "PRODUCING", "PUBLISHED")]
         for row in registry:
             progress = WORKBENCH.project_stage_progress(row)
             self.assertEqual(18, progress["total"])

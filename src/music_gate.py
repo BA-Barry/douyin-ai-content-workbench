@@ -4,11 +4,12 @@ import argparse
 import hashlib
 import json
 import sys
+import os
 from pathlib import Path
 from typing import Any
 
 
-ROOT = Path("G:/抖音视频")
+ROOT = Path(os.environ.get("DOUYIN_PROJECT_ROOT") or Path(__file__).resolve().parents[1]).expanduser().resolve()
 MODES = {"none", "platform_manual", "licensed_local", "original_local"}
 
 

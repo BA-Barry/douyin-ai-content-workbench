@@ -7,9 +7,10 @@ import math
 import re
 import threading
 from datetime import datetime
+import os
 from pathlib import Path
 
-ROOT = Path(r"G:\抖音视频")
+ROOT = Path(os.environ.get("DOUYIN_PROJECT_ROOT") or Path(__file__).resolve().parents[1]).expanduser().resolve()
 STORE = ROOT / "data" / "workbench_drafts.json"
 _LOCK = threading.RLock()
 

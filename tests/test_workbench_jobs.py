@@ -4,10 +4,12 @@ import importlib.util
 import json
 import tempfile
 import unittest
+from contextlib import ExitStack
+from unittest.mock import patch
 from pathlib import Path
 
 
-PROJECT_ROOT = Path(r"G:\抖音视频")
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
 SPEC = importlib.util.spec_from_file_location("workbench_task_runner", PROJECT_ROOT / "workbench" / "task_runner.py")
 RUNNER = importlib.util.module_from_spec(SPEC)
 assert SPEC.loader is not None
@@ -18,6 +20,17 @@ class WorkbenchJobTests(unittest.TestCase):
     def setUp(self) -> None:
         self.temp = tempfile.TemporaryDirectory(dir=PROJECT_ROOT / "workspace")
         self.root = Path(self.temp.name)
+        self.patches = ExitStack()
+        self.patches.enter_context(patch.dict("os.environ", {"DOUYIN_FLOVA_SKILL_ID": "test-private-skill"}))
+        import skill_router
+        self.patches.enter_context(patch.dict(skill_router.FLOVA_PRIVATE_SKILL, {"id": "test-private-skill"}))
+        self.skills = self.root / "skills"
+        for name in ("douyin-media-orchestrator", "retro-scrapbook-collage", "douyin-prompt-director", "douyin-wallpaper-export", "flova", "hyperframes-motion-language", "remotion-best-practices", "remotion-create", "remotion-multimedia", "douyin-caption-pipeline", "remotion-studio", "remotion-render", "video-use"):
+            folder = self.skills / name
+            folder.mkdir(parents=True)
+            (folder / "SKILL.md").write_text(f"---\nname: {name}\n---\nSynthetic test fixture.", encoding="utf-8")
+        real_builder = skill_router.build_skill_plan
+        self.patches.enter_context(patch.object(RUNNER, "build_skill_plan", side_effect=lambda *a, **kw: real_builder(*a, **{"skills_root": self.skills, **kw})))
         self.video_id = "fixture-video-01"
         (self.root / "content" / self.video_id / "production").mkdir(parents=True)
         (self.root / "content" / self.video_id / "approvals").mkdir(parents=True)
@@ -27,6 +40,7 @@ class WorkbenchJobTests(unittest.TestCase):
         RUNNER.JOB_OUTPUT = self.root / "workspace" / "workbench" / "jobs"
 
     def tearDown(self) -> None:
+        self.patches.close()
         RUNNER.ROOT, RUNNER.JOB_STORE, RUNNER.JOB_OUTPUT = self.originals
         RUNNER.media_library.configure(PROJECT_ROOT)
         self.temp.cleanup()
@@ -91,7 +105,7 @@ class WorkbenchJobTests(unittest.TestCase):
         self.assertEqual("READY_FOR_CODEX", plan["status"])
         self.assertEqual("FLOVA", plan["provider_target"])
         self.assertEqual("flova", plan["prompt_compiler"])
-        self.assertEqual("1115fa6bc53344ed981a261a43aada82", plan["provider_skill"]["id"])
+        self.assertEqual("test-private-skill", plan["provider_skill"]["id"])
 
     def test_video_plan_preserves_explicit_seedance_route(self) -> None:
         plan = RUNNER.build_skill_plan(self.root, self.video_id, {
@@ -258,7 +272,7 @@ class WorkbenchJobTests(unittest.TestCase):
         self.assertEqual("WAITING_GENERATION_APPROVAL", result["status"])
         self.assertFalse(result["preflight_confirmation"]["allows_generation"])
         self.assertEqual([], result["external_actions_performed"])
-        self.assertEqual("1115fa6bc53344ed981a261a43aada82", result["private_skill"]["skill_id"])
+        self.assertEqual("test-private-skill", result["private_skill"]["skill_id"])
 
     def test_video_task_confirmation_supports_seedance_direct_route(self) -> None:
         prompt_package = {

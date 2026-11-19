@@ -12,11 +12,12 @@ from contextlib import ExitStack
 from pathlib import Path
 from unittest.mock import Mock, patch
 
-ROOT = Path(r"G:\抖音视频")
+ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT / "workbench"))
 import flova_runtime as runtime
 import task_runner as runner
+from project_runtime import find_tool
 
 
 def envelope(data=None, code=0, **extra):
@@ -32,11 +33,13 @@ PENDING = {"action_id": "a-1", "type": "batch_task_limit", "blocking": True,
 class FlovaRuntimeTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        ffmpeg = find_tool("ffmpeg", ROOT)
+        if not ffmpeg or not find_tool("ffprobe", ROOT):
+            raise unittest.SkipTest("Optional FFmpeg/ffprobe required for media-delivery integration tests")
         cls.media_temp = tempfile.TemporaryDirectory(dir=ROOT / "workspace")
         cls.video = Path(cls.media_temp.name) / "synthetic-test-fixture.mp4"
         cls.short_video = Path(cls.media_temp.name) / "synthetic-short-fixture.mp4"
         cls.wide_video = Path(cls.media_temp.name) / "synthetic-wide-fixture.mp4"
-        ffmpeg = next((ROOT / "tools/ffmpeg/current").rglob("ffmpeg.exe"))
         for target, size, duration in ((cls.video, "108x192", "5"), (cls.short_video, "108x192", "1"), (cls.wide_video, "192x108", "5")):
             result = subprocess.run([str(ffmpeg), "-v", "error", "-f", "lavfi", "-i", f"testsrc2=size={size}:rate=12",
                                      "-t", duration, "-c:v", "libx264", "-pix_fmt", "yuv420p", str(target)],
@@ -307,7 +310,7 @@ class FlovaApprovalTests(unittest.TestCase):
                 runtime.confirmation(root, "pilot")
 
     def test_empty_boolean_nonfinite_budget_or_model_mismatch_is_not_approval(self):
-        task = {"generation_spec": {"model_proposal": "Seedance 2.5"}, "references": []}
+        task = {"generation_spec": {"model_proposal": "Seedance 2.5"}, "references": [], "private_skill": {"skill_id": "test-private-skill"}}
         good = {"generation_ack": True, "budget_mode": "INCLUDED_ONLY", "model": "Seedance 2.5", "max_credits": 10}
         runtime.validate_approval(good, task)
         for key, value in (("max_credits", 0), ("max_credits", True), ("max_credits", float("nan")), ("max_credits", float("inf")),
@@ -318,7 +321,7 @@ class FlovaApprovalTests(unittest.TestCase):
 
     def test_readonly_account_status_returns_no_credentials(self):
         with tempfile.TemporaryDirectory(dir=ROOT / "workspace") as folder:
-            root = Path(folder); exe = root / "envs/flova-cli/flova.exe"; exe.parent.mkdir(parents=True); exe.write_bytes(b"mock exe not run")
+            root = Path(folder); exe = root / "envs/flova-cli" / ("flova.exe" if sys.platform == "win32" else "flova"); exe.parent.mkdir(parents=True); exe.write_bytes(b"mock exe not run")
             responses = [envelope({"token_stored": True, "token": "PRIVATE"}), envelope({"credits_balance": 0,
                 "subscription_info": {"name": "Free", "access_token": "PRIVATE", "unknown": "PRIVATE"}, "email": "PRIVATE"})]
             with patch.object(runtime, "cli", side_effect=responses) as cli:
@@ -336,7 +339,7 @@ class FlovaJobDeduplicationTests(unittest.TestCase):
         self.stack = ExitStack()
         for name, value in (("ROOT", self.root), ("JOB_STORE", self.root / "data/jobs.json"), ("JOB_OUTPUT", self.root / "workspace/jobs"), ("OFFLINE_MODE", False)):
             self.stack.enter_context(patch.object(runner, name, value))
-        self.stack.enter_context(patch.object(runner.flova_runtime, "confirmation", return_value={"generation_spec": {"model_proposal": "Seedance 2.5"}, "references": []}))
+        self.stack.enter_context(patch.object(runner.flova_runtime, "confirmation", return_value={"generation_spec": {"model_proposal": "Seedance 2.5"}, "references": [], "private_skill": {"skill_id": "test-private-skill"}}))
         self.submit = self.stack.enter_context(patch.object(runner._EXECUTOR, "submit"))
         self.payload = {"actionId": "GENERATE_FLOVA_VIDEO", "videoId": "pilot", "parameters": {
             "generation_ack": True, "model": "Seedance 2.5", "budget_mode": "INCLUDED_ONLY", "max_credits": 10}}

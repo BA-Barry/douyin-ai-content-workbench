@@ -128,10 +128,10 @@ function renderDraftStatus(entry) {
   const controls = document.querySelector('#draft-actions');
   if (!target || !controls) return;
   const descriptions = {
-    loading:'正在读取 G 盘草稿；可以继续输入。',
-    pending:'有修改，等待自动保存到 G 盘…',
+    loading:'正在读取 项目目录草稿；可以继续输入。',
+    pending:'有修改，等待自动保存到 项目目录…',
     saving:'正在保存草稿… 这不会启动制作。',
-    saved:entry.version ? `草稿已保存到 G 盘${entry.updated_at ? ` · ${entry.updated_at}` : ''}。提交与执行状态见任务记录。` : '修改会自动保存到 G 盘；执行任务才会提交制作。',
+    saved:entry.version ? `草稿已保存到 项目目录${entry.updated_at ? ` · ${entry.updated_at}` : ''}。提交与执行状态见任务记录。` : '修改会自动保存到 项目目录；执行任务才会提交制作。',
     error:`草稿未能保存：${entry.error} 本页输入仍保留，请勿关闭页面。`,
     conflict:'另一个页面已更新此草稿。本页输入未覆盖，请选择保留哪一份。',
   };
@@ -383,7 +383,7 @@ async function showStudio(isCurrent = () => true) {
     <ol id="workflow-steps" class="workflow-steps" ${createMode ? 'hidden' : ''}>${workflowSteps.map(([id,title,desc], index) => `<li data-step="${index + 1}"><span>${id}</span><div><b>${title}</b><small>${desc}</small></div></li>`).join('')}</ol>
     <div class="creation-grid" ${createMode ? 'hidden' : ''}>
       <section id="task-builder" class="builder-shell">
-        <div class="builder-head"><div><span class="section-kicker">任务设置</span><h2>这次要完成什么</h2></div><span class="save-state">所有产物写入 G 盘</span></div>
+        <div class="builder-head"><div><span class="section-kicker">任务设置</span><h2>这次要完成什么</h2></div><span class="save-state">所有产物写入 项目目录</span></div>
         <label class="current-task">当前任务<select id="studio-action">${actions.map(action => `<option value="${action.id}" ${action.id === selectedActionId ? 'selected' : ''}>${escape(actionPresentation[action.id]?.[1] || action.label)}</option>`).join('')}</select></label>
         <details class="task-tools"><summary>查看全部工具及用途</summary><div class="task-palette">${actionButtons}</div></details>
         <div id="action-description" class="action-summary"></div>
@@ -929,8 +929,8 @@ async function showAssets(isCurrent = () => true) {
   if (!isCurrent()) return;
   const items = assetData.items || [];
   content.innerHTML = `<section class="asset-library-intro"><div><h2>素材库只负责保存和解释素材</h2><p>图片和视频制作共用这一个库，但进入项目后使用不同生产线。公开参考素材不会自动被当成可发布成品。</p></div><dl><div><dt>素材</dt><dd>${items.filter(item => item.status !== 'TRASHED').length}</dd></div><div><dt>已绑定</dt><dd>${items.filter(item => (item.project_ids || []).length).length}</dd></div><div><dt>回收站</dt><dd>${items.filter(item => item.status === 'TRASHED').length}</dd></div></dl></section>
-    <section class="asset-import panel"><div class="panel-head"><div><h2>放入图片、视频或音频</h2><p class="muted">文件会复制到 G:\\抖音视频\\assets\\library，原始文件保持不变。</p></div><span class="safe-chip">最大 512 MB / 文件</span></div><form id="asset-upload-form"><label class="asset-drop full"><span>选择素材文件</span><input name="file" type="file" accept="image/*,video/*,audio/*" required><small>支持常见图片、MP4/MOV/WebM 与常见音频格式</small></label><label>素材名称<input name="name" placeholder="便于检索的名称"></label><label>素材权利<select name="rights_status"><option value="OWNED">自有或本人制作</option><option value="LICENSED">已取得许可</option><option value="PUBLIC_REFERENCE_ONLY">仅作公开参考</option><option value="PENDING_REVIEW">待确认</option></select></label><label>参考作用<select name="role">${Object.entries(assetRoleLabels).map(([value,label]) => `<option value="${value}">${escape(label)}</option>`).join('')}</select></label><label class="full">希望保留什么<textarea name="retain" placeholder="例如：暖色胶片质感、上下留白、低机位运镜"></textarea></label><label class="full">必须改变什么<textarea name="change" placeholder="例如：人物、地点、文字和贴纸排列全部改变"></textarea></label><label class="studio-checkbox full"><input name="external_upload_allowed" type="checkbox" value="true"><span><b>外部模型上传许可</b>允许把这份素材上传到已确认的 Seedance、MiniMax H3 或 Flova 任务。未勾选时系统会保持人工确认门。</span></label><button class="button dark full" type="submit">复制到素材库</button></form>
-    <details class="path-import"><summary>登记电脑上已有的素材路径</summary><form id="asset-path-form"><label class="full">本地绝对路径<input name="path" required placeholder="G:\\抖音视频\\workspace\\reference.mp4"></label><label>素材权利<select name="rights_status"><option value="OWNED">自有或本人制作</option><option value="LICENSED">已取得许可</option><option value="PUBLIC_REFERENCE_ONLY">仅作公开参考</option><option value="PENDING_REVIEW">待确认</option></select></label><label>参考作用<select name="role">${Object.entries(assetRoleLabels).map(([value,label]) => `<option value="${value}">${escape(label)}</option>`).join('')}</select></label><button class="button ghost full" type="submit">复制并登记</button></form></details></section>
+    <section class="asset-import panel"><div class="panel-head"><div><h2>放入图片、视频或音频</h2><p class="muted">文件会复制到 .\\assets\\library，原始文件保持不变。</p></div><span class="safe-chip">最大 512 MB / 文件</span></div><form id="asset-upload-form"><label class="asset-drop full"><span>选择素材文件</span><input name="file" type="file" accept="image/*,video/*,audio/*" required><small>支持常见图片、MP4/MOV/WebM 与常见音频格式</small></label><label>素材名称<input name="name" placeholder="便于检索的名称"></label><label>素材权利<select name="rights_status"><option value="OWNED">自有或本人制作</option><option value="LICENSED">已取得许可</option><option value="PUBLIC_REFERENCE_ONLY">仅作公开参考</option><option value="PENDING_REVIEW">待确认</option></select></label><label>参考作用<select name="role">${Object.entries(assetRoleLabels).map(([value,label]) => `<option value="${value}">${escape(label)}</option>`).join('')}</select></label><label class="full">希望保留什么<textarea name="retain" placeholder="例如：暖色胶片质感、上下留白、低机位运镜"></textarea></label><label class="full">必须改变什么<textarea name="change" placeholder="例如：人物、地点、文字和贴纸排列全部改变"></textarea></label><label class="studio-checkbox full"><input name="external_upload_allowed" type="checkbox" value="true"><span><b>外部模型上传许可</b>允许把这份素材上传到已确认的 Seedance、MiniMax H3 或 Flova 任务。未勾选时系统会保持人工确认门。</span></label><button class="button dark full" type="submit">复制到素材库</button></form>
+    <details class="path-import"><summary>登记电脑上已有的素材路径</summary><form id="asset-path-form"><label class="full">本地绝对路径<input name="path" required placeholder=".\\workspace\\reference.mp4"></label><label>素材权利<select name="rights_status"><option value="OWNED">自有或本人制作</option><option value="LICENSED">已取得许可</option><option value="PUBLIC_REFERENCE_ONLY">仅作公开参考</option><option value="PENDING_REVIEW">待确认</option></select></label><label>参考作用<select name="role">${Object.entries(assetRoleLabels).map(([value,label]) => `<option value="${value}">${escape(label)}</option>`).join('')}</select></label><button class="button ghost full" type="submit">复制并登记</button></form></details></section>
     <div class="asset-toolbar"><label class="search"><span>搜索</span><input id="asset-search" placeholder="名称、角色、保留或改变"></label><div class="asset-filters"><button class="filter active" data-asset-filter="ACTIVE">使用中</button><button class="filter" data-asset-filter="image">图片</button><button class="filter" data-asset-filter="video">视频</button><button class="filter" data-asset-filter="audio">音频</button><button class="filter" data-asset-filter="TRASHED">回收站</button></div></div><div id="asset-grid" class="media-asset-grid"></div>
     <section class="asset-binding-note"><b>如何用于项目</b><p>进入制作中心，在“保存要求并自动编排 Skills”中勾选素材。系统会写入项目绑定清单，并按项目路线判断文生、图生、多模态或条件性图片锚点。</p><div><button class="button dark" data-go="studio" type="button">进入制作中心</button></div></section>`;
   let filter = 'ACTIVE';
@@ -965,7 +965,7 @@ async function showAssets(isCurrent = () => true) {
     if (!(file instanceof File) || !file.size) return showToast('请先选择素材文件。');
     const metadata = {filename:file.name,name:data.get('name') || file.name.replace(/\.[^.]+$/, ''),rights_status:data.get('rights_status'),role:data.get('role'),retain:data.get('retain'),change:data.get('change'),external_upload_allowed:data.get('external_upload_allowed') === 'true',source_type:'USER_UPLOAD'};
     button.disabled = true; button.textContent = '正在复制…';
-    try { await api('/api/assets/import',{method:'POST',headers:{'X-Asset-Metadata':encodeURIComponent(JSON.stringify(metadata))},body:file}); showToast('素材已复制到 G 盘素材库。'); navigate('assets'); }
+    try { await api('/api/assets/import',{method:'POST',headers:{'X-Asset-Metadata':encodeURIComponent(JSON.stringify(metadata))},body:file}); showToast('素材已复制到 项目目录素材库。'); navigate('assets'); }
     catch (error) { showToast(`导入失败：${error.message}`); button.disabled = false; button.textContent = '复制到素材库'; }
   });
   document.querySelector('#asset-path-form').addEventListener('submit', async event => {
@@ -1080,7 +1080,7 @@ async function trashProject(button) {
   const isPublished = button.dataset.published === 'true';
   const approved = await requestConfirmation({
     title: '将项目移入回收站',
-    message: '只移除本地工作流项目，不会删除抖音上的作品。项目可从 G 盘回收站恢复。',
+    message: '只移除本地工作流项目，不会删除抖音上的作品。项目可从 项目目录回收站恢复。',
     expected: id,
     acknowledgement: isPublished ? '我知道：这是已发布项目，移入后将停止本地指标监控。' : '',
     submitLabel: '确认移入项目回收站',
@@ -1091,7 +1091,7 @@ async function trashProject(button) {
   try {
     await api(`/api/projects/${encodeURIComponent(id)}/trash`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({confirm:id,publishedAcknowledged})});
     if (dialog.open) dialog.close();
-    showToast('项目已移入 G 盘回收站，可在项目页恢复。');
+    showToast('项目已移入 项目目录回收站，可在项目页恢复。');
     navigate('projects');
   } catch (error) { showToast(`项目未移动：${error.message}`); }
   finally { button.disabled = false; }
@@ -1102,7 +1102,7 @@ function wireSkillTrash() {
     const name = button.dataset.trashSkill;
     const approved = await requestConfirmation({
       title: '将 Skill 移入回收站',
-      message: 'Skill 将从 Codex 可调用列表中移除，并保存在 G 盘回收站中，可随时恢复。',
+      message: 'Skill 将从 Codex 可调用列表中移除，并保存在 项目目录回收站中，可随时恢复。',
       expected: name,
       submitLabel: '确认移入 Skill 回收站',
     });
@@ -1110,7 +1110,7 @@ function wireSkillTrash() {
     button.disabled = true;
     try {
       await api(`/api/skills/${encodeURIComponent(name)}/trash`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({confirm:name})});
-      showToast('Skill 已移入 G 盘回收站。'); navigate('skills');
+      showToast('Skill 已移入 项目目录回收站。'); navigate('skills');
     } catch (error) { showToast(`Skill 未移动：${error.message}`); }
     finally { button.disabled = false; }
   }));
@@ -1171,7 +1171,7 @@ function wireScrollTargets() {
 const views = {studio: showStudio, assets: showAssets, overview, topics: showTopics, projects: showProjects, pipeline: showPipeline, release: showRelease, skills: showSkills, offline: showOffline};
 
 function showConnectionError(error, view = 'studio') {
-  content.innerHTML = `<section class="error-state" role="alert"><h2>工作台暂时无法读取数据</h2><p>${escape(error.message)}</p><p>如果本地服务未启动，请双击 <code>G:\\抖音视频\\workbench\\打开工作台.cmd</code>。无需重新创建项目。</p><button id="retry-connection" class="button dark" type="button">重试连接</button></section>`;
+  content.innerHTML = `<section class="error-state" role="alert"><h2>工作台暂时无法读取数据</h2><p>${escape(error.message)}</p><p>如果本地服务未启动，请双击 <code>.\\workbench\\打开工作台.cmd</code>。无需重新创建项目。</p><button id="retry-connection" class="button dark" type="button">重试连接</button></section>`;
   document.querySelector('#retry-connection').onclick = () => initialize(view);
 }
 

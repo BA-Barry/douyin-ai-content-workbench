@@ -89,7 +89,7 @@ try {{
         self.assertFalse((self.project / "workspace").exists())
 
     def test_another_project_is_never_reused(self) -> None:
-        result = self.launch("return @{status='ok'; root='G:\\unrelated-project'; mode='local'}")
+        result = self.launch("return @{status='ok'; root=(Join-Path $testRoot 'unrelated-project'); mode='local'}")
         self.assertEqual(1, result.returncode)
         self.assertIn("another application or project", result.stderr)
         self.assertFalse((self.project / "workspace").exists())

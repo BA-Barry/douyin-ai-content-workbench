@@ -5,10 +5,11 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 from pathlib import Path
 
 
-PROJECT_ROOT = Path(r"G:\抖音视频").resolve()
+PROJECT_ROOT = Path(os.environ.get("DOUYIN_PROJECT_ROOT") or Path(__file__).resolve().parents[2]).expanduser().resolve().resolve()
 PROVIDER_MODES = {"LOCAL", "NATIVE_TOOL", "PAID_API"}
 JOB_STATUSES = {"DRAFT", "READY", "GENERATED", "BLOCKED"}
 HUMAN_REVIEW = {"PENDING", "PASS", "FAIL"}

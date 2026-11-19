@@ -7,6 +7,7 @@ import json
 import shutil
 import sys
 from datetime import datetime
+import os
 from pathlib import Path
 
 
@@ -24,7 +25,7 @@ if hasattr(sys.stderr, "reconfigure"):
     sys.stderr.reconfigure(encoding="utf-8")
 
 
-ROOT = Path("G:/抖音视频")
+ROOT = Path(os.environ.get("DOUYIN_PROJECT_ROOT") or Path(__file__).resolve().parents[1]).expanduser().resolve()
 REGISTRY_FIELDS = [
     "video_id", "state", "owner", "title", "hypothesis", "brief_path",
     "manifest_path", "created_at", "updated_at", "blockers", "next_action",

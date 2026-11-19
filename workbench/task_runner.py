@@ -18,6 +18,7 @@ import time
 import uuid
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
+import os
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
@@ -35,10 +36,11 @@ from skill_router import build_skill_plan
 from codex_dispatcher import enqueue_plan
 import media_library
 import flova_runtime
+from project_runtime import project_python
 
 
-ROOT = Path(r"G:\抖音视频")
-PYTHON = ROOT / "envs" / "content" / "Scripts" / "python.exe"
+ROOT = Path(os.environ.get("DOUYIN_PROJECT_ROOT") or Path(__file__).resolve().parents[1]).expanduser().resolve()
+PYTHON = project_python(ROOT)
 JOB_STORE = ROOT / "data" / "workbench_jobs.json"
 JOB_OUTPUT = ROOT / "workspace" / "workbench" / "jobs"
 _LOCK = threading.RLock()

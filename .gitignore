@@ -13,6 +13,7 @@
 
 # Project-local runtimes, models, caches, and downloaded tools
 /envs/
+/.venv/
 /models/
 /cache/
 /tools/

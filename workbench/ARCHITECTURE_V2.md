@@ -13,7 +13,7 @@
 - Skill 执行计划：`content/<video_id>/production/skill_plan.json`
 - 趋势缓存：`research/trend_monitor/latest.json`
 - 项目证据：`content/<video_id>/`
-- Skill：`C:\Users\86135\.codex\skills`（只索引 Codex 管理的元数据；运行缓存仍在 G 盘）
+- Skill：`<Codex Skills directory>`（只索引 Codex 管理的元数据；运行缓存仍在 项目目录）
 
 工作台不建立第二套项目状态，不直接修改内容阶段；正式状态仍通过 `src/workflow_control.py` 转换。任务状态只描述一次本地命令的执行结果，不等于内容阶段状态。
 
@@ -44,7 +44,7 @@ Pixelle-Video 的运行时和历史实验仍保留，但新任务动作已禁用
 普通启动：
 
 ```powershell
-& 'G:\抖音视频\workbench\start-workbench.ps1'
+& '.\workbench\start-workbench.ps1'
 ```
 
 可离线完成：账号档案切换、选题浏览与收藏、项目创建、证据检查、流程查看、素材预览、审计、本地制作规划、历史指标复盘、Skill 索引和离线快照导出。
@@ -52,7 +52,7 @@ Pixelle-Video 的运行时和历史实验仍保留，但新任务动作已禁用
 ## 强制离线模式
 
 ```powershell
-& 'G:\抖音视频\workbench\start-workbench-offline.ps1'
+& '.\workbench\start-workbench-offline.ps1'
 ```
 
 该模式不增加新的执行能力，只把联网边界显式化并隐藏平台入口。趋势与指标仅显示本地缓存；不会伪装刷新成功。
@@ -60,10 +60,10 @@ Pixelle-Video 的运行时和历史实验仍保留，但新任务动作已禁用
 ## 无服务器离线快照
 
 ```powershell
-& 'G:\抖音视频\workbench\export-offline-workbench.ps1'
+& '.\workbench\export-offline-workbench.ps1'
 ```
 
-输出：`G:\抖音视频\workbench\offline\workbench_offline.html`
+输出：`.\workbench\offline\workbench_offline.html`
 
 这是单个只读 HTML 文件：无 `fetch`、无外部脚本、无远程字体、无图片请求、无账号凭证。它适合断网查看账号定位、收藏候选、项目阶段和联网边界；需要刷新时重新导出。
 
@@ -81,5 +81,5 @@ Pixelle-Video 的运行时和历史实验仍保留，但新任务动作已禁用
 - 服务只绑定 `127.0.0.1`；
 - 写入接口校验同源请求；
 - 页面使用 CSP、禁止 iframe 嵌入并禁止 MIME 猜测；
-- 项目和 Skill 删除继续进入 G 盘可恢复回收站；
+- 项目和 Skill 删除继续进入 项目目录可恢复回收站；
 - 离线快照完全只读，不提供修改或发布按钮。

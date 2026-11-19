@@ -6,10 +6,11 @@ import argparse
 import hashlib
 import json
 from datetime import datetime
+import os
 from pathlib import Path
 
 
-ROOT = Path(r"G:\抖音视频")
+ROOT = Path(os.environ.get("DOUYIN_PROJECT_ROOT") or Path(__file__).resolve().parents[1]).expanduser().resolve()
 TREND_DIR = ROOT / "research" / "trend_monitor"
 SNAPSHOTS = TREND_DIR / "snapshots"
 LATEST = TREND_DIR / "latest.json"

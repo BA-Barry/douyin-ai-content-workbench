@@ -10,15 +10,16 @@ import argparse
 import hashlib
 import json
 import math
+import os
 from datetime import datetime
 from pathlib import Path
 from typing import Any
 
 
 PRIVATE_SKILL = {
-    "skill_id": "1115fa6bc53344ed981a261a43aada82",
+    "skill_id": os.environ.get("DOUYIN_FLOVA_SKILL_ID", ""),
     "skill_name": "抖音导演提示词编译器",
-    "skill_url": "https://www.flova.ai/skill/?id=1115fa6bc53344ed981a261a43aada82",
+    "skill_url": "https://www.flova.ai/skill/?id=" + os.environ.get("DOUYIN_FLOVA_SKILL_ID", ""),
     "visibility": "PRIVATE_UNPUBLISHED",
 }
 ALLOWED_RIGHTS = {"user_owned", "licensed"}

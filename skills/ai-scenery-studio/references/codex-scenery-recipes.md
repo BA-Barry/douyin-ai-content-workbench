@@ -7,8 +7,8 @@ Read this reference when generating original scenery through Codex or preparing 
 - Provider: `baoyu-image-gen / codex-cli`
 - Authentication: current Codex/ChatGPT login; no `OPENAI_API_KEY`
 - Aspect: `9:16`; one image per call; concurrency 1
-- Project preferences: `G:\抖音视频\.baoyu-skills\baoyu-image-gen\EXTEND.md`
-- Runtime: load `G:\抖音视频\config\project-env.ps1` first so temp and cache stay on G:
+- Project preferences: `.\.baoyu-skills\baoyu-image-gen\EXTEND.md`
+- Runtime: use the configured project cache; on Windows load `config/project-env.ps1` first.
 - Pixel dimensions are selected by Codex. Treat `--quality` and `--size` as ignored for this provider; normalize only after human approval.
 
 The direct in-thread image tool returning an immediate HTTP error is a transport failure. Record it, then use this route only when project preferences already authorize `codex-cli`; do not silently switch to an external paid provider.

@@ -4,7 +4,7 @@
 
 | 能力 | 状态 | 生产用途 | 说明 |
 |---|---|---|---|
-| Codex imagegen / baoyu-image-gen | PRODUCTION PASS | 图片生成默认 | 图片生成固定由 Codex 端完成；批次产物与缓存落 G 盘 |
+| Codex imagegen / baoyu-image-gen | PRODUCTION PASS | 图片生成默认 | 图片生成固定由 Codex 端完成；批次产物与缓存落 项目目录 |
 | 内置 imagegen | 历史 HTTP 404 | 诊断备用 | 不作为静默回退 |
 | 本地 SD1.4 | 工程 PASS / 审美 FAIL | 禁止默认生产 | 4GB GPU 可跑，但输出不达标 |
 | 确定性裁切/归一化 | PASS | 图片默认 | 1080×1920；不生成新细节 |
@@ -12,7 +12,7 @@
 | 抖音图片轮播 | 真实发布 3 条 | 当前默认 | prepare-only 已验证 |
 | DepthFlow 1.0.0 | 工程 PASS | 氛围视频试片 | 1080×1920 低幅景深已跑通 |
 | Remotion 4.0.506 + 官方 Skills | ENGINEERING PASS | 视频后期合成 | 官方 12 个 Skill 已安装；它不是视频生成模型，仍需独立防 PPT 感 QA |
-| G盘 FFmpeg/ffprobe | PASS | 视频/音频默认 | 由 `config/project-env.ps1` 注入 |
+| 项目目录 FFmpeg/ffprobe | PASS | 视频/音频默认 | 由 `config/project-env.ps1` 注入 |
 | qa_probe | PASS AS PROBE | 视频必需 | 顶层 PASS 只代表探针成功 |
 | material manifest validator | PASS | 所有路线必需 | 权利、哈希、AI来源门 |
 | MeloTTS zero-BERT | 工程 PASS / 生产 FAIL | 仅诊断 | 自然度未通过用户门 |
